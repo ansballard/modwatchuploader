@@ -26,6 +26,7 @@ var cleanArray = function cleanArray(arr) {
     for(var i = 0; i < arr.length; i++) {
       if(arr[i] === "") {
         arr.splice(i, 1);
+        i--;
       }
     }
   }
@@ -55,48 +56,52 @@ app.on('ready', function() {
     mainWindow.webContents.send('ping', 'whoooooooh!');
   });
 
+  var jsonToSend = {};
+
   ipc.on("filepath", function(event, filepath) {
-    console.log(filepath);
+    //console.log(filepath);
   });
 
   ipc.on("getFiles", function(event) {
-    var plugins = [];
-    var modlist = [];
-    var ini = [];
-    var prefsini = [];
+    var files = {
+      plugins: [],
+      modlist: [],
+      ini: [],
+      prefsini: []
+    };
 
     var fileDir = dialog.showOpenDialog({properties: ["openDirectory"], title: "Find your mod folder"})[0];
     try {
-      plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\n");
+      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\n");
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      modlist = fs.readFileSync(fileDir + "/modlist.txt", "utf8").split("\n");
+      files.modlist = fs.readFileSync(fileDir + "/modlist.txt", "utf8").split("\n");
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\n");
+      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\n");
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\n");
+      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\n");
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
 
-    cleanArray(plugins);
-    cleanArray(modlist);
-    cleanArray(ini);
-    cleanArray(prefsini);
+    cleanArray(files.plugins);
+    cleanArray(files.modlist);
+    cleanArray(files.ini);
+    cleanArray(files.prefsini);
 
-    console.log({plugins: plugins, modlist: modlist, ini: ini, prefsini: prefsini});
+    mainWindow.webContents.send("filesread", JSON.stringify(files));
   });
 
 });
