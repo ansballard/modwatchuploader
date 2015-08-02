@@ -2,7 +2,7 @@
     var ipc = require("ipc");
     var app = angular.module("uploader", ["ngMaterial"]);
 
-    app.controller("MainCtrl", ["$scope", "$mdToast", "AjaxService", function($scope, $mdToast, AjaxService) {
+    app.controller("MainCtrl", ["$scope", "$mdToast", "$modDialog", "AjaxService", function($scope, $mdToast, $modDialog, AjaxService) {
       $scope.scriptVersion = {
         local: "1.0",
         global: "0.26b"
