@@ -1,23 +1,79 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Hello World!</title>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js">https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js</script>
-    <script type="text/javascript" src="http://cdn.rawgit.com/angular/bower-material/v0.10.0/angular-material.js">http://cdn.rawgit.com/angular/bower-material/v0.10.0/angular-material.js</script>
-    <script type="text/javascript" src="src/js/ng.js"></script>
-  </head>
-  <body ng-app="uploader" ng-controller="MainCtrl">
-    <h1>{{test}}</h1>
-    We are using io.js <script>document.write(process.version)</script>
-    and Electron <script>document.write(process.versions['electron'])</script>.
-    <input type="text" placeholder="username" ng-model="userInfo.username"/>
-    <input type="password" placeholder="password" ng-model="userInfo.password"/>
-    <div><button type="button" ng-click="saveUser()">Save</button></div>
-    <div><button type="button" ng-click="getFiles()">Get Files</button></div>
-    <div><button type="button" ng-click="uploadMods()">Upload</button></div>
-    <pre>{{userInfo|json}}</pre>
-  </body>
+
+<head>
+  <title>Hello World!</title>
+  <link rel="stylesheet" href="deps/angular-material.min.css">
+  <link type="text/css" href="deps/material-icons.css" rel="stylesheet">
+  <script type="text/javascript" src="deps/angular.js"></script>
+  <script type="text/javascript" src="deps/angular-animate.min.js"></script>
+  <script type="text/javascript" src="deps/angular-aria.min.js"></script>
+  <script type="text/javascript" src="deps/angular-material.js"></script>
+  <script type="text/javascript" src="src/js/ng.js"></script>
+</head>
+
+<body layout="column" layout-align="center top" ng-app="uploader" ng-controller="MainCtrl">
+  <md-toolbar style="margin-bottom: 20px;">
+    <h1 style="margin-left: 20px;">Modwat.ch Uploader</h1>
+  </md-toolbar>
+  <md-content style="margin: 0 50px;">
+    <section>
+      <md-input-container>
+        <label>Username</label>
+        <input type="text" ng-model="userInfo.username" />
+      </md-input-container>
+      <md-input-container>
+        <label>Password</label>
+        <input type="password" ng-model="userInfo.password" />
+      </md-input-container>
+      <md-input-container>
+        <label>Mod Profile Directory</label>
+        <input disabled type="text" ng-model="filepath" />
+      </md-input-container>
+    </section>
+    <section layout="row" layout-align="center">
+      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser()">
+        Save
+        <md-tooltip>
+          Remember your login info
+        </md-tooltip>
+      </md-button>
+      <md-button class="md-raised md-primary" ng-click="getFiles()">
+        Get Files
+        <md-tooltip>
+          Your MO mod profile folder
+        </md-tooltip>
+      </md-button>
+      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="uploadMods()">
+        Upload
+        <md-tooltip>
+          Send to modwat.ch
+        </md-tooltip>
+      </md-button>
+    </section>
+    <section>
+      <md-list layout="column">
+        <md-list-item ng-repeat="file in files">
+          <h3>{{file.display}}</h3> <p>{{userInfo[file.ref].length}} lines</p>
+        </md-list-item>
+      </md-list>
+    </section>
+  </md-content>
+  <script type="text/ng-template" id="versiontoast.html">
+    <md-toast>
+      <span flex>You are not using the <a href="http://www.nexusmods.com/skyrim/mods/56640/?">latest stable version</a></span>
+    </md-toast>
+  </script>
+  <script type="text/ng-template" id="uploaddonetoast.html">
+    <md-toast>
+      <span flex>Mods uploaded successfully!</span>
+    </md-toast>
+  </script>
+  <script type="text/ng-template" id="serverdowntoast.html">
+    <md-toast>
+      <span flex>The modwat.ch api server is not responding</span>
+    </md-toast>
+  </script>
+</body>
+
 </html>
