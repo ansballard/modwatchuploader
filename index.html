@@ -52,6 +52,16 @@
       </md-button>
     </section>
     <section>
+      <md-grid-list
+        md-cols="4" md-row-height="1:1" md-gutter="12px"
+        ng-repeat="file in files">
+        <md-grid-tile>
+          <md-grid-tile-footer>
+            <h3>{{file.display}}</h3>
+          </md-grid-tile-footer>
+        </md-grid-tile>
+      </md-grid-list>
+
       <md-list layout="column">
         <md-list-item ng-repeat="file in files">
           <h3>{{file.display}}</h3> <p>{{userInfo[file.ref].length}} lines</p>
@@ -72,6 +82,11 @@
   <script type="text/ng-template" id="serverdowntoast.html">
     <md-toast>
       <span flex>The modwat.ch api server is not responding</span>
+    </md-toast>
+  </script>
+  <script type="text/ng-template" id="savedinfotoast.html">
+    <md-toast>
+      <span flex>Login info saved successfully</span>
     </md-toast>
   </script>
 </body>

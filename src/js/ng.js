@@ -2,7 +2,7 @@
     var ipc = require("ipc");
     var app = angular.module("uploader", ["ngMaterial"]);
 
-    app.controller("MainCtrl", ["$scope", "$mdToast", "$modDialog", "AjaxService", function($scope, $mdToast, $modDialog, AjaxService) {
+    app.controller("MainCtrl", ["$scope", "$mdToast", "AjaxService", function($scope, $mdToast, AjaxService) {
       $scope.scriptVersion = {
         local: "1.0",
         global: "0.26b"
@@ -37,8 +37,13 @@
         ini: [],
         prefsini: []
       };
-      $scope.filepath = window.localStorage.getItem("modwatch.filepath") || ""
-      $scope.files = [];
+      if(window.localStorage.getItem("modwatch.filepath")) {
+        $scope.filepath = window.localStorage.getItem("modwatch.filepath") || "";
+        $scope.files = [];
+        if($scope.filepath !== "" && $scope.filepath !== null) {
+          ipc.send("getFilesNoDialog", $scope.filepath);
+        }
+      }
       var getUserInfo = function getUserInfo(username) {
         if(username !== "") {
           AjaxService.getUserInfo(username,
@@ -56,9 +61,8 @@
       getUserInfo($scope.userInfo.username);
       $scope.getFiles = function getFiles() {
         ipc.send("getFiles");
-      }
+      };
       ipc.on("filepath", function(filepath) {
-        window.localStorage.setItem("modwatch.filepath", filepath);
         $scope.filepath = filepath;
       });
       ipc.on("filesread", function(files) {
@@ -81,7 +85,6 @@
         if(files.prefsini.length > 0) {
           $scope.files.push({display: $scope.userInfo.game + "prefs.ini", ref: "prefsini"});
         }
-        console.log(files);
         $scope.$digest();
       });
 
@@ -89,13 +92,18 @@
         if($scope.userInfo.username !== "" && $scope.userInfo.password !== "") {
           window.localStorage.setItem("modwatch.username", $scope.userInfo.username);
           window.localStorage.setItem("modwatch.password", $scope.userInfo.password);
+          window.localStorage.setItem("modwatch.filepath", $scope.filepath);
           getUserInfo($scope.userInfo.username);
+          $mdToast.show({
+            templateUrl: "savedinfotoast.html",
+            hideDelay: 3000,
+            position: "bottom right"
+          });
         }
       };
 
       $scope.uploadMods = function uploadMods() {
-        console.log($scope.userInfo);
-        /*AjaxService.uploadMods($scope.userInfo,
+        AjaxService.uploadMods($scope.userInfo,
           function(res) {
             $mdToast.show({
               templateUrl: "uploaddonetoast.html",
@@ -109,7 +117,7 @@
               position: "bottom right"
             });
           }
-        );*/
+        );
       };
     }])
     .factory("AjaxService", ["$http", function($http) {

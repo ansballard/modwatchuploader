@@ -58,54 +58,61 @@ app.on('ready', function() {
 
   var jsonToSend = {};
 
-  ipc.on("getFiles", function(event) {
+  var getFiles = function getFiles(filepath) {
     var files = {
       plugins: [],
       modlist: [],
       ini: [],
       prefsini: []
     };
-
-    var fileDir = dialog.showOpenDialog({
-      properties: ["openDirectory"],
-      title: "Find your mod profile folder"
-    });
-    if(typeof fileDir !== "undefined") {
-      fileDir = fileDir[0];
-      mainWindow.webContents.send("filepath", fileDir);
-
-      try {
-        files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\n");
-      }
-      catch(e) {
-        console.log("plugins read failed:", e);
-      }
-      try {
-        files.modlist = fs.readFileSync(fileDir + "/modlist.txt", "utf8").split("\n");
-      }
-      catch(e) {
-        console.log("plugins read failed:", e);
-      }
-      try {
-        files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\n");
-      }
-      catch(e) {
-        console.log("plugins read failed:", e);
-      }
-      try {
-        files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\n");
-      }
-      catch(e) {
-        console.log("plugins read failed:", e);
-      }
-
-      cleanArray(files.plugins);
-      cleanArray(files.modlist);
-      cleanArray(files.ini);
-      cleanArray(files.prefsini);
-
-      mainWindow.webContents.send("filesread", JSON.stringify(files));
+    var fileDir = "";
+    if(typeof filepath !== "undefined") {
+      fileDir = filepath;
+    } else {
+      fileDir = dialog.showOpenDialog({
+        properties: ["openDirectory"],
+        title: "Find your mod profile folder"
+      });
     }
+
+    try {
+      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\n");
+    }
+    catch(e) {
+      console.log("plugins read failed:", e);
+    }
+    try {
+      files.modlist = fs.readFileSync(fileDir + "/modlist.txt", "utf8").split("\n");
+    }
+    catch(e) {
+      console.log("plugins read failed:", e);
+    }
+    try {
+      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\n");
+    }
+    catch(e) {
+      console.log("plugins read failed:", e);
+    }
+    try {
+      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\n");
+    }
+    catch(e) {
+      console.log("plugins read failed:", e);
+    }
+
+    cleanArray(files.plugins);
+    cleanArray(files.modlist);
+    cleanArray(files.ini);
+    cleanArray(files.prefsini);
+
+    mainWindow.webContents.send("filesread", JSON.stringify(files));
+  };
+
+  ipc.on("getFiles", function(event) {
+    getFiles();
   });
+  ipc.on("getFilesNoDialog", function(event, filename) {
+    getFiles(filename);
+  })
 
 });
