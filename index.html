@@ -12,61 +12,95 @@
   <script type="text/javascript" src="src/js/ng.js"></script>
 </head>
 
-<body layout="column" layout-align="center top" ng-app="uploader" ng-controller="MainCtrl">
+<body ng-app="uploader" ng-controller="MainCtrl">
   <md-toolbar style="margin-bottom: 20px;">
     <h1 style="margin-left: 20px;">Modwat.ch Uploader</h1>
   </md-toolbar>
-  <md-content style="margin: 0 50px;">
-    <section>
-      <md-input-container>
+  <md-content layout="column" layout-align="left center" style="margin: 0 50px;">
+    <section layout="row">
+      <md-input-container flex>
         <label>Username</label>
         <input type="text" ng-model="userInfo.username" />
       </md-input-container>
-      <md-input-container>
+      <md-input-container flex>
         <label>Password</label>
         <input type="password" ng-model="userInfo.password" />
       </md-input-container>
-      <md-input-container>
-        <label>Mod Profile Directory</label>
-        <input disabled type="text" ng-model="filepath" />
-      </md-input-container>
     </section>
+    <md-tabs md-dynamic-height>
+      <md-tab label="Mod Organizer">
+        <md-input-container>
+          <label>Mod Profile Directory</label>
+          <input disabled type="text" ng-model="mo.filepath" />
+        </md-input-container>
+        <section layout="row" layout-align="center">
+          <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="mo.saveUser()">
+            Save
+            <md-tooltip>
+              Remember your login info
+            </md-tooltip>
+          </md-button>
+          <md-button class="md-raised md-primary" ng-click="mo.getFiles()">
+            Get Files
+            <md-tooltip>
+              Your MO mod profile folder
+            </md-tooltip>
+          </md-button>
+          <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="mo.uploadMods()">
+            Upload
+            <md-tooltip>
+              Send to modwat.ch
+            </md-tooltip>
+          </md-button>
+        </section>
+      </md-tab>
+      <md-tab label="Nexus Mod Manager">
+        <div  layout="row">
+          <md-input-container flex>
+            <label>plugins.txt directory</label>
+            <input disabled type="text" ng-model="nmm.plugins" />
+          </md-input-container>
+          <md-input-container flex>
+            <label>ini file directory</label>
+            <input disabled type="text" ng-model="nmm.ini" />
+          </md-input-container>
+        </div>
+        <section layout="column">
+          <div layout="row" layout-align="center">
+            <md-button class="md-raised md-primary" ng-click="nmm.getPluginsFiles()">
+              Get Plugins.txt
+              <md-tooltip>
+                Your plugins.txt folder
+              </md-tooltip>
+            </md-button>
+            <md-button class="md-raised md-primary" ng-click="nmm.getIniFiles()">
+              Get Ini Files
+              <md-tooltip>
+                Your Ini Files
+              </md-tooltip>
+            </md-button>
+          </div>
+          <div layout="row" layout-align="center">
+            <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="nmm.saveUser()">
+              Save
+              <md-tooltip>
+                Remember your login info
+              </md-tooltip>
+            </md-button>
+            <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="nmm.uploadMods()">
+              Upload
+              <md-tooltip>
+                Send to modwat.ch
+              </md-tooltip>
+            </md-button>
+          </div>
+        </section>
+      </md-tab>
+    </md-tabs>
     <section layout="row" layout-align="center">
-      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser()">
-        Save
-        <md-tooltip>
-          Remember your login info
-        </md-tooltip>
-      </md-button>
-      <md-button class="md-raised md-primary" ng-click="getFiles()">
-        Get Files
-        <md-tooltip>
-          Your MO mod profile folder
-        </md-tooltip>
-      </md-button>
-      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="uploadMods()">
-        Upload
-        <md-tooltip>
-          Send to modwat.ch
-        </md-tooltip>
-      </md-button>
-    </section>
-    <section>
-      <md-grid-list
-        md-cols="4" md-row-height="1:1" md-gutter="12px"
-        ng-repeat="file in files">
-        <md-grid-tile>
-          <md-grid-tile-footer>
-            <h3>{{file.display}}</h3>
-          </md-grid-tile-footer>
-        </md-grid-tile>
-      </md-grid-list>
-
-      <md-list layout="column">
-        <md-list-item ng-repeat="file in files">
-          <h3>{{file.display}}</h3> <p>{{userInfo[file.ref].length}} lines</p>
-        </md-list-item>
-      </md-list>
+      <md-chips>
+        <md-chip ng-repeat="file in files">{{file.display}}</md-chip>
+      </md-chips>
     </section>
   </md-content>
   <script type="text/ng-template" id="versiontoast.html">

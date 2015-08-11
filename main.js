@@ -36,13 +36,13 @@ var cleanArray = function cleanArray(arr) {
 // initialization and is ready to create browser windows.
 app.on('ready', function() {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 600, height: 600});
+  mainWindow = new BrowserWindow({width: 500, height: 600});
 
   // and load the index.html of the app.
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
   // Open the devtools.
-  mainWindow.openDevTools();
+  //mainWindow.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {

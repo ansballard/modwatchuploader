@@ -143,11 +143,3 @@
       }
     }]);
 }());
-
-(function() {
-  var ipc = require("ipc");
-  ipc.on("ping", function(message) {
-    console.log(message);  // Prints "whoooooooh!"
-  });
-  ipc.send("filepath", "path/to/file");
-}());
