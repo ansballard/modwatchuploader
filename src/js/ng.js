@@ -19,12 +19,12 @@
       AjaxService.getCurrentVersion(
         function(res) {
           $scope.scriptVersion.global = res;
-          if($scope.scriptVersion.local !== res) {
-            $mdToast.show({
+          if($scope.scriptVersion.local !== res) { // dev
+            /*$mdToast.show({
               templateUrl: "versiontoast.html",
               hideDelay: 6000,
               position: "bottom right"
-            });
+            });*/
           }
         },
         function(err) {
@@ -59,17 +59,17 @@
         }
       } else {
         if(window.localStorage.getItem("modwatch.nmm_pluginsPath")) {
-          $scope.mo.filepath = window.localStorage.getItem("modwatch.nmm_pluginsPath") || "";
+          $scope.nmm.pluginsPath = window.localStorage.getItem("modwatch.nmm_pluginsPath") || "";
           $scope.files = [];
           if($scope.mo.filepath !== "" && $scope.mo.filepath !== null) {
-            ipc.send("nmm.getPluginsFileNoDialog", $scope.mo.filepath);
+            ipc.send("nmm.getPluginsFileNoDialog", $scope.nmm.pluginsPath);
           }
         }
         if(window.localStorage.getItem("modwatch.nmm_iniPath")) {
-          $scope.mo.filepath = window.localStorage.getItem("modwatch.nmm_iniPath") || "";
+          $scope.nmm.iniPath = window.localStorage.getItem("modwatch.nmm_iniPath") || "";
           $scope.files = [];
-          if($scope.mo.filepath !== "" && $scope.mo.filepath !== null) {
-            ipc.send("nmm.getIniFilesNoDialog", $scope.mo.filepath);
+          if($scope.nmm.iniPath !== "" && $scope.mo.filepath !== null) {
+            ipc.send("nmm.getIniFilesNoDialog", $scope.nmm.iniPath);
           }
         }
       }
@@ -96,6 +96,9 @@
       $scope.nmm.getPluginsFile = function nmm_getPluginsFile() {
         ipc.send("nmm.getPluginsFile");
       };
+      $scope.nmm.getIniFiles = function nmm_getIniFiles() {
+        ipc.send("nmm.getIniFiles");
+      };
       ipc.on("mo.filepath", function(filepath) {
         $scope.mo.filepath = filepath || "";
       });
@@ -107,22 +110,23 @@
       });
       ipc.on("filesread", function(files) {
         files = JSON.parse(files);
-        $scope.userInfo.plugins = files.plugins || $scope.userInfo.plugins;
-        $scope.userInfo.modlist = files.modlist || [];
-        $scope.userInfo.ini = files.ini || $scope.userInfo.ini;
-        $scope.userInfo.prefsini = files.prefsini || $scope.userInfo.prefsini;
+        $scope.userInfo.plugins = typeof files.plugins !== "undefined" ? files.plugins : $scope.userInfo.plugins;
+        $scope.userInfo.modlist = typeof files.modlist !== "undefined" ? files.modlist : $scope.userInfo.modlist;
+        $scope.userInfo.ini = typeof files.ini !== "undefined" ? files.ini : $scope.userInfo.ini;
+        $scope.userInfo.prefsini = typeof files.prefsini !== "undefined" ? files.prefsini : $scope.userInfo.prefsini;
 
         $scope.files = [];
-        if(files.plugins && files.plugins.length > 0) {
+        console.log($scope.userInfo);
+        if($scope.userInfo.plugins.length > 0) {
           $scope.files.push({display: "plugins.txt", ref: "plugins"});
         }
-        if(files.modlist && files.modlist.length > 0) {
+        if($scope.userInfo.modlist.length > 0) {
           $scope.files.push({display: "modlist.txt", ref: "modlist"});
         }
-        if(files.ini && files.ini.length > 0) {
+        if($scope.userInfo.ini.length > 0) {
           $scope.files.push({display: $scope.userInfo.game + ".ini", ref: "ini"});
         }
-        if(files.prefsini && files.prefsini.length > 0) {
+        if($scope.userInfo.prefsini.length > 0) {
           $scope.files.push({display: $scope.userInfo.game + "prefs.ini", ref: "prefsini"});
         }
         $scope.$digest();
@@ -153,6 +157,7 @@
               position: "bottom right"
             });
           }, function(err) {
+            console.log(err);
             $mdToast.show({
               templateUrl: "serverdowntoast.html",
               hideDelay: 6000,

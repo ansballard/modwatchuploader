@@ -42,7 +42,7 @@ app.on('ready', function() {
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
   // Open the devtools.
-  mainWindow.openDevTools();
+  //mainWindow.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -109,7 +109,8 @@ app.on('ready', function() {
 
   nmm.getPlugins = function nmm_getPlugins(filepath) {
     var files = {
-      plugins: []
+      plugins: [],
+      modlist: []
     };
     var fileDir = "";
     if(typeof filepath !== "undefined") {
@@ -136,6 +137,7 @@ app.on('ready', function() {
 
   nmm.getIni = function nmm_getIni(filepath) {
     var files = {
+      modlist: [],
       ini: [],
       prefsini: []
     };
@@ -182,10 +184,10 @@ app.on('ready', function() {
     mo.getFiles(filename);
   });
   ipc.on("nmm.getPluginsFileNoDialog", function(event, filename) {
-    mo.getFiles(filename);
+    nmm.getPlugins(filename);
   });
   ipc.on("nmm.getIniFilesNoDialog", function(event, filename) {
-    mo.getFiles(filename);
+    nmm.getIni(filename);
   });
 
 });

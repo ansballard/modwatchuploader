@@ -29,21 +29,25 @@
     </section>
     <md-tabs md-dynamic-height md-selected="currentTab">
       <md-tab label="Mod Organizer">
-        <md-input-container>
-          <label>Mod Profile Directory</label>
-          <input disabled type="text" ng-model="mo.filepath" />
-        </md-input-container>
+        <div layout="row">
+          <md-button class="md-fab md-raised md-primary" ng-click="mo.getFiles()">
+            <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
+            </svg>
+            <md-tooltip>
+              Your MO mod profile folder
+            </md-tooltip>
+          </md-button>
+          <md-input-container>
+            <label>Mod Profile Directory</label>
+            <input type="text" ng-model="mo.filepath" />
+          </md-input-container>
+        </div>
         <section layout="row" layout-align="center">
           <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser('MO')">
             Save
             <md-tooltip>
               Remember your login info
-            </md-tooltip>
-          </md-button>
-          <md-button class="md-raised md-primary" ng-click="mo.getFiles()">
-            Get Files
-            <md-tooltip>
-              Your MO mod profile folder
             </md-tooltip>
           </md-button>
           <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || !mo.filepath" ng-click="uploadMods()">
@@ -55,30 +59,38 @@
         </section>
       </md-tab>
       <md-tab label="Nexus Mod Manager">
-        <div  layout="row">
+        <div layout="row">
+          <md-button class="md-fab md-raised md-primary" ng-click="nmm.getPluginsFile()">
+            <ng-md-icon>
+              <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
+              </svg>
+            </ng-md-icon>
+            <md-tooltip>
+              Your plugins.txt folder
+            </md-tooltip>
+          </md-button>
           <md-input-container flex>
             <label>plugins.txt directory</label>
-            <input disabled type="text" ng-model="nmm.pluginsPath" />
+            <input type="text" ng-model="nmm.pluginsPath" />
           </md-input-container>
+        </div>
+        <div layout="row">
+          <md-button class="md-fab md-raised md-primary" ng-click="nmm.getIniFiles()">
+            <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
+            </svg>
+            <md-tooltip>
+              Your Ini Files
+            </md-tooltip>
+          </md-button>
           <md-input-container flex>
             <label>ini file directory</label>
-            <input disabled type="text" ng-model="nmm.iniPath" />
+            <input type="text" ng-model="nmm.iniPath" />
           </md-input-container>
         </div>
         <section layout="column">
           <div layout="row" layout-align="center">
-            <md-button class="md-raised md-primary" ng-click="nmm.getPluginsFile()">
-              plugins.txt
-              <md-tooltip>
-                Your plugins.txt folder
-              </md-tooltip>
-            </md-button>
-            <md-button class="md-raised md-primary" ng-click="nmm.getIniFiles()">
-              .ini files
-              <md-tooltip>
-                Your Ini Files
-              </md-tooltip>
-            </md-button>
           </div>
           <div layout="row" layout-align="center">
             <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser('NMM')">
