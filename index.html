@@ -27,14 +27,14 @@
         <input type="password" ng-model="userInfo.password" />
       </md-input-container>
     </section>
-    <md-tabs md-dynamic-height>
+    <md-tabs md-dynamic-height md-selected="currentTab">
       <md-tab label="Mod Organizer">
         <md-input-container>
           <label>Mod Profile Directory</label>
           <input disabled type="text" ng-model="mo.filepath" />
         </md-input-container>
         <section layout="row" layout-align="center">
-          <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="mo.saveUser()">
+          <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser('MO')">
             Save
             <md-tooltip>
               Remember your login info
@@ -46,7 +46,7 @@
               Your MO mod profile folder
             </md-tooltip>
           </md-button>
-          <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="mo.uploadMods()">
+          <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || !mo.filepath" ng-click="uploadMods()">
             Upload
             <md-tooltip>
               Send to modwat.ch
@@ -58,36 +58,36 @@
         <div  layout="row">
           <md-input-container flex>
             <label>plugins.txt directory</label>
-            <input disabled type="text" ng-model="nmm.plugins" />
+            <input disabled type="text" ng-model="nmm.pluginsPath" />
           </md-input-container>
           <md-input-container flex>
             <label>ini file directory</label>
-            <input disabled type="text" ng-model="nmm.ini" />
+            <input disabled type="text" ng-model="nmm.iniPath" />
           </md-input-container>
         </div>
         <section layout="column">
           <div layout="row" layout-align="center">
-            <md-button class="md-raised md-primary" ng-click="nmm.getPluginsFiles()">
-              Get Plugins.txt
+            <md-button class="md-raised md-primary" ng-click="nmm.getPluginsFile()">
+              plugins.txt
               <md-tooltip>
                 Your plugins.txt folder
               </md-tooltip>
             </md-button>
             <md-button class="md-raised md-primary" ng-click="nmm.getIniFiles()">
-              Get Ini Files
+              .ini files
               <md-tooltip>
                 Your Ini Files
               </md-tooltip>
             </md-button>
           </div>
           <div layout="row" layout-align="center">
-            <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="nmm.saveUser()">
+            <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser('NMM')">
               Save
               <md-tooltip>
                 Remember your login info
               </md-tooltip>
             </md-button>
-            <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="nmm.uploadMods()">
+            <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || !nmm.pluginsPath || !nmm.iniPath" ng-click="uploadMods()">
               Upload
               <md-tooltip>
                 Send to modwat.ch

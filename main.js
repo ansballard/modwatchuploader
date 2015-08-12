@@ -42,7 +42,7 @@ app.on('ready', function() {
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
 
   // Open the devtools.
-  //mainWindow.openDevTools();
+  mainWindow.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -52,13 +52,11 @@ app.on('ready', function() {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on('did-finish-load', function() {
-    mainWindow.webContents.send('ping', 'whoooooooh!');
-  });
-
   var jsonToSend = {};
+  var mo = {};
+  var nmm = {};
 
-  var getFiles = function getFiles(filepath) {
+  mo.getFiles = function mo_getFiles(filepath) {
     var files = {
       plugins: [],
       modlist: [],
@@ -106,13 +104,88 @@ app.on('ready', function() {
     cleanArray(files.prefsini);
 
     mainWindow.webContents.send("filesread", JSON.stringify(files));
+    mainWindow.webContents.send("mo.filepath", fileDir);
   };
 
-  ipc.on("getFiles", function(event) {
-    getFiles();
+  nmm.getPlugins = function nmm_getPlugins(filepath) {
+    var files = {
+      plugins: []
+    };
+    var fileDir = "";
+    if(typeof filepath !== "undefined") {
+      fileDir = filepath;
+    } else {
+      fileDir = dialog.showOpenDialog({
+        properties: ["openDirectory"],
+        title: "Find your plugins.txt folder"
+      });
+    }
+
+    try {
+      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\n");
+    }
+    catch(e) {
+      console.log("plugins read failed:", e);
+    }
+
+    cleanArray(files.plugins);
+
+    mainWindow.webContents.send("filesread", JSON.stringify(files));
+    mainWindow.webContents.send("nmm.pluginsFile", fileDir);
+  };
+
+  nmm.getIni = function nmm_getIni(filepath) {
+    var files = {
+      ini: [],
+      prefsini: []
+    };
+    var fileDir = "";
+    if(typeof filepath !== "undefined") {
+      fileDir = filepath;
+    } else {
+      fileDir = dialog.showOpenDialog({
+        properties: ["openDirectory"],
+        title: "Find your .ini files"
+      });
+    }
+
+    try {
+      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\n");
+    }
+    catch(e) {
+      console.log("ini read failed:", e);
+    }
+    try {
+      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\n");
+    }
+    catch(e) {
+      console.log("prefsini read failed:", e);
+    }
+
+    cleanArray(files.ini);
+    cleanArray(files.prefsini);
+
+    mainWindow.webContents.send("filesread", JSON.stringify(files));
+    mainWindow.webContents.send("nmm.iniFiles", fileDir);
+  };
+
+  ipc.on("mo.getFiles", function(event) {
+    mo.getFiles();
   });
-  ipc.on("getFilesNoDialog", function(event, filename) {
-    getFiles(filename);
-  })
+  ipc.on("nmm.getPluginsFile", function(event) {
+    nmm.getPlugins();
+  });
+  ipc.on("nmm.getIniFiles", function(event) {
+    nmm.getIni();
+  });
+  ipc.on("mo.getFilesNoDialog", function(event, filename) {
+    mo.getFiles(filename);
+  });
+  ipc.on("nmm.getPluginsFileNoDialog", function(event, filename) {
+    mo.getFiles(filename);
+  });
+  ipc.on("nmm.getIniFilesNoDialog", function(event, filename) {
+    mo.getFiles(filename);
+  });
 
 });

@@ -7,6 +7,15 @@
         local: "1.0",
         global: "0.26b"
       };
+      $scope.mo = {
+        filepath: undefined
+      };
+      $scope.nmm = {
+        pluginsPath: undefined,
+        iniPath: undefined
+      };
+      $scope.currentTab = 0;
+
       AjaxService.getCurrentVersion(
         function(res) {
           $scope.scriptVersion.global = res;
@@ -37,13 +46,35 @@
         ini: [],
         prefsini: []
       };
-      if(window.localStorage.getItem("modwatch.filepath")) {
-        $scope.filepath = window.localStorage.getItem("modwatch.filepath") || "";
-        $scope.files = [];
-        if($scope.filepath !== "" && $scope.filepath !== null) {
-          ipc.send("getFilesNoDialog", $scope.filepath);
+      if(window.localStorage.getItem("modwatch.program") === "NMM") {
+        $scope.currentTab = 1;
+      }
+      if($scope.currentTab === 0) {
+        if(window.localStorage.getItem("modwatch.mo_filepath")) {
+          $scope.mo.filepath = window.localStorage.getItem("modwatch.mo_filepath") || "";
+          $scope.files = [];
+          if($scope.mo.filepath !== "" && $scope.mo.filepath !== null) {
+            ipc.send("mo.getFilesNoDialog", $scope.mo.filepath);
+          }
+        }
+      } else {
+        if(window.localStorage.getItem("modwatch.nmm_pluginsPath")) {
+          $scope.mo.filepath = window.localStorage.getItem("modwatch.nmm_pluginsPath") || "";
+          $scope.files = [];
+          if($scope.mo.filepath !== "" && $scope.mo.filepath !== null) {
+            ipc.send("nmm.getPluginsFileNoDialog", $scope.mo.filepath);
+          }
+        }
+        if(window.localStorage.getItem("modwatch.nmm_iniPath")) {
+          $scope.mo.filepath = window.localStorage.getItem("modwatch.nmm_iniPath") || "";
+          $scope.files = [];
+          if($scope.mo.filepath !== "" && $scope.mo.filepath !== null) {
+            ipc.send("nmm.getIniFilesNoDialog", $scope.mo.filepath);
+          }
         }
       }
+
+
       var getUserInfo = function getUserInfo(username) {
         if(username !== "") {
           AjaxService.getUserInfo(username,
@@ -59,41 +90,52 @@
         }
       };
       getUserInfo($scope.userInfo.username);
-      $scope.getFiles = function getFiles() {
-        ipc.send("getFiles");
+      $scope.mo.getFiles = function mo_getFiles() {
+        ipc.send("mo.getFiles");
       };
-      ipc.on("filepath", function(filepath) {
-        $scope.filepath = filepath;
+      $scope.nmm.getPluginsFile = function nmm_getPluginsFile() {
+        ipc.send("nmm.getPluginsFile");
+      };
+      ipc.on("mo.filepath", function(filepath) {
+        $scope.mo.filepath = filepath || "";
+      });
+      ipc.on("nmm.pluginsFile", function(filepath) {
+        $scope.nmm.pluginsPath = filepath || "";
+      });
+      ipc.on("nmm.iniFiles", function(filepath) {
+        $scope.nmm.iniPath = filepath || "";
       });
       ipc.on("filesread", function(files) {
         files = JSON.parse(files);
-        $scope.userInfo.plugins = files.plugins;
-        $scope.userInfo.modlist = files.modlist;
-        $scope.userInfo.ini = files.ini;
-        $scope.userInfo.prefsini = files.prefsini;
+        $scope.userInfo.plugins = files.plugins || $scope.userInfo.plugins;
+        $scope.userInfo.modlist = files.modlist || [];
+        $scope.userInfo.ini = files.ini || $scope.userInfo.ini;
+        $scope.userInfo.prefsini = files.prefsini || $scope.userInfo.prefsini;
 
         $scope.files = [];
-        if(files.plugins.length > 0) {
+        if(files.plugins && files.plugins.length > 0) {
           $scope.files.push({display: "plugins.txt", ref: "plugins"});
         }
-        if(files.modlist.length > 0) {
+        if(files.modlist && files.modlist.length > 0) {
           $scope.files.push({display: "modlist.txt", ref: "modlist"});
         }
-        if(files.ini.length > 0) {
+        if(files.ini && files.ini.length > 0) {
           $scope.files.push({display: $scope.userInfo.game + ".ini", ref: "ini"});
         }
-        if(files.prefsini.length > 0) {
+        if(files.prefsini && files.prefsini.length > 0) {
           $scope.files.push({display: $scope.userInfo.game + "prefs.ini", ref: "prefsini"});
         }
         $scope.$digest();
       });
 
-      $scope.saveUser = function saveUser() {
+      $scope.saveUser = function saveUser(program) {
         if($scope.userInfo.username !== "" && $scope.userInfo.password !== "") {
           window.localStorage.setItem("modwatch.username", $scope.userInfo.username);
           window.localStorage.setItem("modwatch.password", $scope.userInfo.password);
-          window.localStorage.setItem("modwatch.filepath", $scope.filepath);
-          getUserInfo($scope.userInfo.username);
+          window.localStorage.setItem("modwatch.mo_filepath", $scope.mo.filepath || "");
+          window.localStorage.setItem("modwatch.nmm_pluginsPath", $scope.nmm.pluginsPath || "");
+          window.localStorage.setItem("modwatch.nmm_iniPath", $scope.nmm.iniPath || "");
+          window.localStorage.setItem("modwatch.program", program || "MO");
           $mdToast.show({
             templateUrl: "savedinfotoast.html",
             hideDelay: 3000,
