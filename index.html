@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Hello World!</title>
+  <title>Modwat.ch Uploader</title>
   <link rel="stylesheet" href="deps/angular-material.min.css">
   <link type="text/css" href="deps/material-icons.css" rel="stylesheet">
   <script type="text/javascript" src="deps/angular.js"></script>
@@ -27,6 +27,16 @@
         <input type="password" ng-model="userInfo.password" />
       </md-input-container>
     </section>
+    <section layout="row">
+      <md-input-container flex>
+        <label>Tag</label>
+        <input type="text" ng-model="userInfo.tag" />
+      </md-input-container>
+      <md-input-container flex>
+        <label>ENB</label>
+        <input type="text" ng-model="userInfo.enb" />
+      </md-input-container>
+    </section>
     <md-tabs md-dynamic-height md-selected="currentTab">
       <md-tab label="Mod Organizer">
         <div layout="row">
@@ -43,20 +53,6 @@
             <input type="text" ng-model="mo.filepath" />
           </md-input-container>
         </div>
-        <section layout="row" layout-align="center">
-          <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser('MO')">
-            Save
-            <md-tooltip>
-              Remember your login info
-            </md-tooltip>
-          </md-button>
-          <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || !mo.filepath" ng-click="uploadMods()">
-            Upload
-            <md-tooltip>
-              Send to modwat.ch
-            </md-tooltip>
-          </md-button>
-        </section>
       </md-tab>
       <md-tab label="Nexus Mod Manager">
         <div layout="row">
@@ -89,26 +85,22 @@
             <input type="text" ng-model="nmm.iniPath" />
           </md-input-container>
         </div>
-        <section layout="column">
-          <div layout="row" layout-align="center">
-          </div>
-          <div layout="row" layout-align="center">
-            <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser('NMM')">
-              Save
-              <md-tooltip>
-                Remember your login info
-              </md-tooltip>
-            </md-button>
-            <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || !nmm.pluginsPath || !nmm.iniPath" ng-click="uploadMods()">
-              Upload
-              <md-tooltip>
-                Send to modwat.ch
-              </md-tooltip>
-            </md-button>
-          </div>
-        </section>
       </md-tab>
     </md-tabs>
+    <div layout="row" layout-align="center">
+      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser('NMM')">
+        Save
+        <md-tooltip>
+          Remember your login info
+        </md-tooltip>
+      </md-button>
+      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || !nmm.pluginsPath || !nmm.iniPath" ng-click="uploadMods()">
+        Upload
+        <md-tooltip>
+          Send to modwat.ch
+        </md-tooltip>
+      </md-button>
+    </div>
     <section layout="row" layout-align="center">
       <md-chips>
         <md-chip ng-repeat="file in files">{{file.display}}</md-chip>
