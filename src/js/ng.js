@@ -15,6 +15,21 @@
         iniPath: undefined
       };
       $scope.currentTab = 0;
+      $scope.canUpload = function canUpload() {
+        if($scope.userInfo.username === "" || $scope.userInfo.password === "") {
+          return false;
+        }
+        if($scope.currentTab === 0) {
+          if(typeof $scope.mo.filepath === "undefined") {
+            return false;
+          }
+        } else {
+          if(typeof $scope.nmm.pluginsPath === "undefined" || typeof $scope.nmm.iniPath === "undefined") {
+            return false;
+          }
+        }
+        return true;
+      };
 
       AjaxService.getCurrentVersion(
         function(res) {
@@ -46,6 +61,7 @@
         ini: [],
         prefsini: []
       };
+      console.log(window.localStorage.getItem("modwatch.program"));
       if(window.localStorage.getItem("modwatch.program") === "NMM") {
         $scope.currentTab = 1;
       }
@@ -132,14 +148,15 @@
         $scope.$digest();
       });
 
-      $scope.saveUser = function saveUser(program) {
+      $scope.saveUser = function saveUser() {
         if($scope.userInfo.username !== "" && $scope.userInfo.password !== "") {
+          var program = $scope.currentTab === 0 ? "MO" : "NMM";
           window.localStorage.setItem("modwatch.username", $scope.userInfo.username);
           window.localStorage.setItem("modwatch.password", $scope.userInfo.password);
           window.localStorage.setItem("modwatch.mo_filepath", $scope.mo.filepath || "");
           window.localStorage.setItem("modwatch.nmm_pluginsPath", $scope.nmm.pluginsPath || "");
           window.localStorage.setItem("modwatch.nmm_iniPath", $scope.nmm.iniPath || "");
-          window.localStorage.setItem("modwatch.program", program || "MO");
+          window.localStorage.setItem("modwatch.program", program);
           $mdToast.show({
             templateUrl: "savedinfotoast.html",
             hideDelay: 3000,

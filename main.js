@@ -74,25 +74,25 @@ app.on('ready', function() {
     }
 
     try {
-      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\n");
+      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\r\n");
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      files.modlist = fs.readFileSync(fileDir + "/modlist.txt", "utf8").split("\n");
+      files.modlist = fs.readFileSync(fileDir + "/modlist.txt", "utf8").split("\r\n");
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\n");
+      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\r\n");
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\n");
+      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\r\n");
     }
     catch(e) {
       console.log("plugins read failed:", e);
