@@ -90,7 +90,6 @@
         }
       }
 
-
       var getUserInfo = function getUserInfo(username) {
         if(username !== "") {
           AjaxService.getUserInfo(username,
@@ -157,29 +156,33 @@
           window.localStorage.setItem("modwatch.nmm_pluginsPath", $scope.nmm.pluginsPath || "");
           window.localStorage.setItem("modwatch.nmm_iniPath", $scope.nmm.iniPath || "");
           window.localStorage.setItem("modwatch.program", program);
-          $mdToast.show({
-            templateUrl: "savedinfotoast.html",
-            hideDelay: 3000,
-            position: "bottom right"
-          });
+          $mdToast.show(
+            $mdToast.simple()
+            .content("Login info saved successfully!")
+            .hideDelay(3000)
+            .position("bottom right")
+          );
         }
       };
 
       $scope.uploadMods = function uploadMods() {
         AjaxService.uploadMods($scope.userInfo,
           function(res) {
-            $mdToast.show({
-              templateUrl: "uploaddonetoast.html",
-              hideDelay: 6000,
-              position: "bottom right"
-            });
+            $mdToast.show(
+              $mdToast.simple()
+              .content("Mods uploaded successfully!")
+              .hideDelay(3000)
+              .position("bottom right")
+            );
           }, function(err) {
-            console.log(err);
-            $mdToast.show({
-              templateUrl: "serverdowntoast.html",
-              hideDelay: 6000,
-              position: "bottom right"
-            });
+            console.log(err.status);
+
+            $mdToast.show(
+              $mdToast.simple()
+                .content("Upload failed")
+                .hideDelay(6000)
+                .position("bottom right")
+            );
           }
         );
       };
