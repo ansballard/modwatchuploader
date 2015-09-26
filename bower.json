@@ -1,0 +1,27 @@
+{
+  "name": "Modwatch Uploader",
+  "version": "0.3.1",
+  "homepage": "https://github.com/ansballard/modwatchuploader",
+  "authors": [
+    "PeanutofDeath <ans.ballard@gmail.com>"
+  ],
+  "main": "main.js",
+  "moduleType": [
+    "node"
+  ],
+  "license": "Apache",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "data"
+  ],
+  "dependencies": {
+    "angular": "~1.4.6",
+    "angular-material": "~0.11.1",
+    "bootstrap": "~3.3.5"
+  }
+}

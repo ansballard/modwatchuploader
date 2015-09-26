@@ -3,10 +3,7 @@
     var app = angular.module("uploader", ["ngMaterial"]);
 
     app.controller("MainCtrl", ["$scope", "$mdToast", "AjaxService", function($scope, $mdToast, AjaxService) {
-      $scope.scriptVersion = {
-        local: "1.0",
-        global: "0.26b"
-      };
+      $scope.scriptVersion = "0.3.1";
       $scope.mo = {
         filepath: undefined
       };
@@ -33,13 +30,12 @@
 
       AjaxService.getCurrentVersion(
         function(res) {
-          $scope.scriptVersion.global = res;
-          if($scope.scriptVersion.local !== res) { // dev
-            /*$mdToast.show({
+          if($scope.scriptVersion !== res) {
+            $mdToast.show({
               templateUrl: "versiontoast.html",
               hideDelay: 6000,
               position: "bottom right"
-            });*/
+            });
           }
         },
         function(err) {
@@ -61,7 +57,6 @@
         ini: [],
         prefsini: []
       };
-      console.log(window.localStorage.getItem("modwatch.program"));
       if(window.localStorage.getItem("modwatch.program") === "NMM") {
         $scope.currentTab = 1;
       }
@@ -130,20 +125,21 @@
         $scope.userInfo.ini = typeof files.ini !== "undefined" ? files.ini : $scope.userInfo.ini;
         $scope.userInfo.prefsini = typeof files.prefsini !== "undefined" ? files.prefsini : $scope.userInfo.prefsini;
 
-        $scope.files = [];
-        console.log($scope.userInfo);
+        var tmp = [];
         if($scope.userInfo.plugins.length > 0) {
-          $scope.files.push({display: "plugins.txt", ref: "plugins"});
+          tmp.push({display: "plugins.txt", ref: "plugins"});
         }
         if($scope.userInfo.modlist.length > 0) {
-          $scope.files.push({display: "modlist.txt", ref: "modlist"});
+          tmp.push({display: "modlist.txt", ref: "modlist"});
         }
         if($scope.userInfo.ini.length > 0) {
-          $scope.files.push({display: $scope.userInfo.game + ".ini", ref: "ini"});
+          tmp.push({display: $scope.userInfo.game + ".ini", ref: "ini"});
         }
         if($scope.userInfo.prefsini.length > 0) {
-          $scope.files.push({display: $scope.userInfo.game + "prefs.ini", ref: "prefsini"});
+          tmp.push({display: $scope.userInfo.game + "prefs.ini", ref: "prefsini"});
         }
+        $scope.files = tmp;
+        console.log($scope.files);
         $scope.$digest();
       });
 
@@ -190,19 +186,22 @@
     .factory("AjaxService", ["$http", function($http) {
       return {
         getCurrentVersion: function getCurrentVersion(success, error) {
-          $http.get("http://modwatchapi-ansballard.rhcloud.com/api/script/version")
+          $http.get("http://modwatchapi-ansballard.rhcloud.com/api/script/version/3")
+          //$http.get("http://127.0.0.1:3001/api/script/version/3")
             .success(success)
             .error(error)
           ;
         },
         getUserInfo: function getUserInfo(username, success, error) {
           $http.get("http://modwatchapi-ansballard.rhcloud.com/api/user/" + username + "/profile")
+          //$http.get("http://127.0.0.1:3001/api/user/" + username + "/profile")
             .success(success)
             .error(error)
           ;
         },
         uploadMods: function uploadMods(json, success, error) {
           $http.post("http://modwatchapi-ansballard.rhcloud.com/loadorder", json)
+          //$http.post("http://127.0.0.1:3001/loadorder", json)
             .success(success)
             .error(error)
           ;
