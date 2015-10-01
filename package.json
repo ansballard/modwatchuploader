@@ -1,10 +1,7 @@
 {
-  "name": "your-app",
-  "version": "0.1.0",
+  "name": "modwatchuploader",
+  "version": "0.3.1",
   "main": "main.js",
-  "dependencies": {
-    "gulp": "^3.9.0"
-  },
   "devDependencies": {
     "browserify": "^11.0.0",
     "gulp": "^3.9.0"
