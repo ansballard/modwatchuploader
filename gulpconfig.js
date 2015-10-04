@@ -3,11 +3,10 @@
 
   var argv = require("yargs").argv;
 
-  var distFolder = "./public/dist/";
+  var distFolder = "./dist/";
   var srcFolder = {
     "main": "./src/",
     "js": "./src/js/",
-    "browserify": "./src/js/modwatchuploader.module.js"
     "css": "./src/css/",
     "node": "./src/node/",
     "fonts": "./src/fonts/",
@@ -33,6 +32,7 @@
       srcFolder.js + "*.js",
       srcFolder.js + "**/*.js"
     ],
+    "browserify": "./src/js/modwatchuploader.module.js",
     "template": [
       srcFolder.js + "*.template.html",
       srcFolder.js + "**/*.template.html"
@@ -54,22 +54,26 @@
 
   var deploy = {
     platform: argv.platform || "win32",
-    arch: argv.arch || "x86",
-    platform: argv.version || "0.32.2",
+    arch: argv.arch || "ia32",
+    version: argv.version || "0.32.2",
     ignore: [
       "node_modules",
       "gulpfile.js",
       "tasks",
       "gulpconfig.js",
-      "legacy"
+      "legacy",
+      "src"
     ]
   };
+
+  var electronDeps = "var ipc = require(\"ipc\");var clipboard = require(\"clipboard\");"
 
   module.exports = {
     dist: dist,
     src: src,
     srcFolder: srcFolder,
-    deploy: deploy
+    deploy: deploy,
+    electronDeps: electronDeps
   };
 
 })();

@@ -11,7 +11,7 @@
   });
 
   gulp.task("cleanNode", function() {
-    return del(config.dist.node + "*.js");
+    return del(config.dist.node + "main.js");
   });
 
   gulp.task("cleanTemplate", function() {

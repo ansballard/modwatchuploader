@@ -12,6 +12,7 @@
   var config = require("../gulpconfig");
 
   gulp.task("injectJS", ["buildJS"], function() {
+
     return gulp.src(config.dist.inject)
       .pipe(plumber())
       .pipe(inject(gulp.src(config.dist.js, {read: false}), {

@@ -2,3 +2,5 @@
 /bower_components
 /auth.dat
 /*/auth.dat
+/deploy
+/dist

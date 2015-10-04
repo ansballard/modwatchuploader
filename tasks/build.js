@@ -4,10 +4,12 @@
   var gulp = require("gulp");
   var plumber = require("gulp-plumber");
   var babel = require("gulp-babel");
+  var source = require("vinyl-source-stream");
+  var buffer = require("vinyl-buffer");
   var browserify = require("browserify");
   var babelify = require("babelify");
-  var ngAnnotate = require("gulp-ng-annotate");
   var uglify = require("gulp-uglify");
+  var header = require("gulp-header");
   var sourcemaps = require("gulp-sourcemaps");
   var cssmin = require("gulp-minify-css");
   var concat = require("gulp-concat");
@@ -15,14 +17,16 @@
   var config = require("../gulpconfig");
 
   gulp.task("buildJS", ["cleanJS", "cacheTemplates"], function() {
+    console.log(config.src.browserify);
     return browserify(config.src.browserify, {debug: true})
       .transform(babelify)
       .bundle()
-      .pipe(source(config.dist.js))
+      .pipe(source("script.min.js"))
       .pipe(buffer())
       .pipe(plumber())
       .pipe(sourcemaps.init())
       .pipe(uglify())
+      .pipe(header(config.electronDeps))
       .pipe(sourcemaps.write("./"))
       .pipe(gulp.dest(config.dist.main))
     ;

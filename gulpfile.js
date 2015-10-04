@@ -7,9 +7,7 @@
   var uglify = require("gulp-uglify");
   var plumber = require("gulp-plumber");
   var concat = require("gulp-concat");
-  var rename = require("gulp-rename");
   var fs = require("fs");
-  var ngAnnotate = require("gulp-ng-annotate");
   var minifyCSS = require("gulp-minify-css");
   var inject = require("gulp-inject");
   var sourcemaps = require("gulp-sourcemaps");

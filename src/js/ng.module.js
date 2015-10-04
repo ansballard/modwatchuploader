@@ -1,5 +1,4 @@
 (function() {
-    var ipc = require("ipc");
     var app = angular.module("uploader", ["ngMaterial"]);
 
     app.controller("MainCtrl", ["$scope", "$mdToast", "AjaxService", function($scope, $mdToast, AjaxService) {
@@ -65,7 +64,7 @@
           $scope.mo.filepath = window.localStorage.getItem("modwatch.mo_filepath") || "";
           $scope.files = [];
           if($scope.mo.filepath !== "" && $scope.mo.filepath !== null) {
-            ipc.send("mo.getFilesNoDialog", $scope.mo.filepath);
+            ipc.send("mo.getFilesNoDialog", $scope.mo.filepath); // FilesService
           }
         }
       } else {
@@ -73,14 +72,14 @@
           $scope.nmm.pluginsPath = window.localStorage.getItem("modwatch.nmm_pluginsPath") || "";
           $scope.files = [];
           if($scope.mo.filepath !== "" && $scope.mo.filepath !== null) {
-            ipc.send("nmm.getPluginsFileNoDialog", $scope.nmm.pluginsPath);
+            ipc.send("nmm.getPluginsFileNoDialog", $scope.nmm.pluginsPath); // FilesService
           }
         }
         if(window.localStorage.getItem("modwatch.nmm_iniPath")) {
           $scope.nmm.iniPath = window.localStorage.getItem("modwatch.nmm_iniPath") || "";
           $scope.files = [];
           if($scope.nmm.iniPath !== "" && $scope.mo.filepath !== null) {
-            ipc.send("nmm.getIniFilesNoDialog", $scope.nmm.iniPath);
+            ipc.send("nmm.getIniFilesNoDialog", $scope.nmm.iniPath); // FilesService
           }
         }
       }
@@ -100,25 +99,25 @@
         }
       };
       getUserInfo($scope.userInfo.username);
-      $scope.mo.getFiles = function mo_getFiles() {
+      $scope.mo.getFiles = function mo_getFiles() { // FilesService
         ipc.send("mo.getFiles");
       };
-      $scope.nmm.getPluginsFile = function nmm_getPluginsFile() {
+      $scope.nmm.getPluginsFile = function nmm_getPluginsFile() { // FilesService
         ipc.send("nmm.getPluginsFile");
       };
-      $scope.nmm.getIniFiles = function nmm_getIniFiles() {
+      $scope.nmm.getIniFiles = function nmm_getIniFiles() { // FilesService
         ipc.send("nmm.getIniFiles");
       };
-      ipc.on("mo.filepath", function(filepath) {
+      ipc.on("mo.filepath", function(filepath) { // FilesService
         $scope.mo.filepath = filepath || "";
       });
-      ipc.on("nmm.pluginsFile", function(filepath) {
+      ipc.on("nmm.pluginsFile", function(filepath) { // FilesService
         $scope.nmm.pluginsPath = filepath || "";
       });
-      ipc.on("nmm.iniFiles", function(filepath) {
+      ipc.on("nmm.iniFiles", function(filepath) { // FilesService
         $scope.nmm.iniPath = filepath || "";
       });
-      ipc.on("filesread", function(files) {
+      ipc.on("filesread", function(files) { // FilesService
         files = JSON.parse(files);
         $scope.userInfo.plugins = typeof files.plugins !== "undefined" ? files.plugins : $scope.userInfo.plugins;
         $scope.userInfo.modlist = typeof files.modlist !== "undefined" ? files.modlist : $scope.userInfo.modlist;
