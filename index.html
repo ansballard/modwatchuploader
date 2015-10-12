@@ -3,7 +3,7 @@
 
 <head>
   <title>Modwat.ch Uploader</title>
-  <link rel="stylesheet" href="bower_components/angular-material/angular-material.min.css">
+  <link rel="stylesheet" href="deps/angular-material.min.css">
   <link type="text/css" href="deps/material-icons.css" rel="stylesheet">
   <!-- inject:css -->
   <link rel="stylesheet" type="text/css" href="dist/style.min.css?hash=cd4d62de8a1a30dadf2020b4c2f711ff"/>
@@ -15,8 +15,9 @@
   </style>
 </head>
 
-<body ng-app="uploader" ng-controller="MainCtrl" ng-jq>
-  <md-content layout="column" layout-align="left center" style="margin: 0 50px;">
+<body ng-app="modwatchuploader" ng-jq>
+  <div ng-view>Loading...</div>
+  <!--<md-content layout="column" layout-align="left center" style="margin: 0 50px;">
     <section layout="row">
       <md-input-container flex>
         <label>Username</label>
@@ -95,34 +96,11 @@
         </svg>
       </md-button>
     </div>
-  </md-content>
-  <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-  <script type="text/javascript" src="bower_components/angular-animate/angular-animate.min.js"></script>
-  <script type="text/javascript" src="bower_components/angular-aria/angular-aria.min.js"></script>
-  <script type="text/javascript" src="bower_components/angular-material/angular-material.min.js"></script>
+  </md-content>-->
   <!-- inject:js -->
-  <script type="text/javascript" src="dist/script.min.js?hash=0ba3432a5bd9d2672eec10518f21b7a7"></script>
+  <script type="text/javascript">var ipc = require("ipc");var clipboard = require("clipboard");</script>
+<script type="text/javascript" src="dist/script.min.js?hash=3254f0b056ab3c9a2612a8cc1bb195f8"></script>
   <!-- endinject -->
-  <script type="text/ng-template" id="versiontoast.html">
-    <md-toast>
-      <span flex>You are not using the <a href="http://www.nexusmods.com/skyrim/mods/56640/?">latest stable version</a></span>
-    </md-toast>
-  </script>
-  <script type="text/ng-template" id="uploaddonetoast.html">
-    <md-toast>
-      <span flex>Mods uploaded successfully!</span>
-    </md-toast>
-  </script>
-  <script type="text/ng-template" id="serverdowntoast.html">
-    <md-toast>
-      <span flex>The modwat.ch api server is not responding</span>
-    </md-toast>
-  </script>
-  <script type="text/ng-template" id="savedinfotoast.html">
-    <md-toast>
-      <span flex>Login info saved successfully</span>
-    </md-toast>
-  </script>
 </body>
 
 </html>

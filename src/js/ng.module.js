@@ -2,7 +2,7 @@
     var app = angular.module("uploader", ["ngMaterial"]);
 
     app.controller("MainCtrl", ["$scope", "$mdToast", "AjaxService", function($scope, $mdToast, AjaxService) {
-      $scope.scriptVersion = "0.3.1";
+      $scope.scriptVersion = "0.3.2";
       $scope.mo = {
         filepath: undefined
       };

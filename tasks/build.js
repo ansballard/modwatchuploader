@@ -1,23 +1,22 @@
-(function() {
+(() => {
   "use strict";
 
-  var gulp = require("gulp");
-  var plumber = require("gulp-plumber");
-  var babel = require("gulp-babel");
-  var source = require("vinyl-source-stream");
-  var buffer = require("vinyl-buffer");
-  var browserify = require("browserify");
-  var babelify = require("babelify");
-  var uglify = require("gulp-uglify");
-  var header = require("gulp-header");
-  var sourcemaps = require("gulp-sourcemaps");
-  var cssmin = require("gulp-minify-css");
-  var concat = require("gulp-concat");
+  const gulp = require("gulp");
+  const plumber = require("gulp-plumber");
+  const babel = require("gulp-babel");
+  const source = require("vinyl-source-stream");
+  const buffer = require("vinyl-buffer");
+  const browserify = require("browserify");
+  const babelify = require("babelify");
+  const uglify = require("gulp-uglify");
+  const header = require("gulp-header");
+  const sourcemaps = require("gulp-sourcemaps");
+  const cssmin = require("gulp-minify-css");
+  const concat = require("gulp-concat");
 
-  var config = require("../gulpconfig");
+  const config = require("../gulpconfig");
 
-  gulp.task("buildJS", ["cleanJS", "cacheTemplates"], function() {
-    console.log(config.src.browserify);
+  gulp.task("buildJS", ["cleanJS", "cacheTemplates"], () => {
     return browserify(config.src.browserify, {debug: true})
       .transform(babelify)
       .bundle()
@@ -42,16 +41,14 @@
     ;*/
   });
 
-  gulp.task("buildNode", ["cleanNode"], function() {
+  gulp.task("buildNode", ["cleanNode"], () => {
     return gulp.src(config.src.node)
       .pipe(plumber())
-      .pipe(babel())
-      .pipe(uglify())
       .pipe(gulp.dest(config.dist.node))
     ;
   });
 
-  gulp.task("buildCSS", ["cleanCSS"], function() {
+  gulp.task("buildCSS", ["cleanCSS"], () => {
     return gulp.src(config.src.css)
       .pipe(plumber())
       .pipe(cssmin())

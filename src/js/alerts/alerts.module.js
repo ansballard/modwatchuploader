@@ -1,4 +1,4 @@
-import "./alertsService";
+import AlertsService from "./alertsService";
 
 (() => {
   "use strict";

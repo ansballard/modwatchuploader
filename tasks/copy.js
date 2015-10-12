@@ -1,19 +1,19 @@
-(function() {
+(() => {
   "use strict";
 
-  var gulp = require("gulp");
-  var plumber = require("gulp-plumber");
+  const gulp = require("gulp");
+  const plumber = require("gulp-plumber");
 
-  var config = require("../gulpconfig");
+  const config = require("../gulpconfig");
 
-  gulp.task("copyFonts", function() {
+  gulp.task("copyFonts", () => {
     return gulp.src(config.src.fonts)
       .pipe(plumber())
       .pipe(gulp.dest(config.dist.fonts))
     ;
   });
 
-  gulp.task("copyImages", function() {
+  gulp.task("copyImages", () => {
     return gulp.src(config.src.images)
       .pipe(plumber())
       .pipe(gulp.dest(config.dist.images))

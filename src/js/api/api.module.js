@@ -1,4 +1,4 @@
-import "./apiService";
+import APIService from "./apiService";
 
 (() => {
   "use strict";

@@ -1,24 +1,24 @@
-(function() {
+(() => {
   "use strict";
 
-  var gulp = require("gulp");
-  var del = require("del");
+  const gulp = require("gulp");
+  const del = require("del");
 
-  var config = require("../gulpconfig");
+  const config = require("../gulpconfig");
 
-  gulp.task("cleanJS", function() {
+  gulp.task("cleanJS", () => {
     return del([config.dist.js, config.dist.js + ".map"]);
   });
 
-  gulp.task("cleanNode", function() {
+  gulp.task("cleanNode", () => {
     return del(config.dist.node + "main.js");
   });
 
-  gulp.task("cleanTemplate", function() {
+  gulp.task("cleanTemplate", () => {
     return del([config.dist.template + "*.js"]);
   });
 
-  gulp.task("cleanCSS", function() {
+  gulp.task("cleanCSS", () => {
     return del([config.dist.css]);
   });
 

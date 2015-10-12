@@ -1,26 +1,26 @@
-(function() {
+(() => {
   "use strict";
 
 
-  var gulp = require("gulp");
-  var babel = require("gulp-babel");
-  var uglify = require("gulp-uglify");
-  var plumber = require("gulp-plumber");
-  var concat = require("gulp-concat");
-  var fs = require("fs");
-  var minifyCSS = require("gulp-minify-css");
-  var inject = require("gulp-inject");
-  var sourcemaps = require("gulp-sourcemaps");
+  const gulp = require("gulp");
+  const babel = require("gulp-babel");
+  const uglify = require("gulp-uglify");
+  const plumber = require("gulp-plumber");
+  const concat = require("gulp-concat");
+  const fs = require("fs");
+  const minifyCSS = require("gulp-minify-css");
+  const inject = require("gulp-inject");
+  const sourcemaps = require("gulp-sourcemaps");
 
-  var config = require("./gulpconfig");
+  const config = require("./gulpconfig");
 
-  var requireDir = require("require-dir");
+  const requireDir = require("require-dir");
 
   requireDir("./tasks");
 
   gulp.task("default", ["inject", "buildNode", "copy"]);
 
-  gulp.task("watch", ["default"], function() {
+  gulp.task("watch", ["default"], () => {
 
     gulp.watch(config.src.js, ["injectJS"]);
     gulp.watch(config.src.template, ["cacheTemplates"]);
@@ -28,7 +28,7 @@
     gulp.watch(config.src.css, ["injectCSS"]);
   });
 
-  module.exports = function() {
+  module.exports = () => {
     gulp.run("default");
   };
 

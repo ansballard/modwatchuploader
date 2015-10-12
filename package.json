@@ -1,7 +1,12 @@
 {
   "name": "modwatchuploader",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ansballard/modwatchuploader"
+  },
+  "license": "Apache-2.0",
   "version": "0.3.2",
-  "main": "main.js",
+  "main": "index.js",
   "devDependencies": {
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
@@ -22,5 +27,15 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "yargs": "^3.26.0"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "dependencies": {
+    "angular": "^1.4.7",
+    "angular-animate": "^1.4.7",
+    "angular-aria": "^1.4.7",
+    "angular-material": "^0.11.2",
+    "angular-route": "^1.4.7"
   }
 }

@@ -1,18 +1,19 @@
-(function() {
+(() => {
   "use strict";
 
-  var gulp = require("gulp");
-  var plumber = require("gulp-plumber");
-  var templateCache = require("gulp-angular-templatecache");
+  const gulp = require("gulp");
+  const plumber = require("gulp-plumber");
+  const templateCache = require("gulp-angular-templatecache");
 
-  var config = require("../gulpconfig");
+  const config = require("../gulpconfig");
 
-  gulp.task("cacheTemplates", function() {
+  gulp.task("cacheTemplates", () => {
     return gulp.src(config.src.template)
       .pipe(plumber())
       .pipe(templateCache({
-        module: config.dist.module,
-        transformUrl: function(url) {
+        module: config.dist.module + ".template",
+        standalone: true,
+        transformUrl: (url) => {
           if(url.indexOf("/") !== -1) {
             return url.split("/")[url.split("/").length - 1];
           } else if(url.indexOf("\\") !== -1) {

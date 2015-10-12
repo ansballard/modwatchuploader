@@ -1,3 +1,5 @@
+import "angular-material";
+
 AlertsService.$inject = ["$mdToast"];
 
 export default AlertsService;
@@ -8,7 +10,7 @@ function AlertsService($mdToast) {
     badVersion: () => {
       $mdToast.show(
         $mdToast.simple()
-        .content("You are not using the <a href=\"http://www.nexusmods.com/skyrim/mods/56640/?\">latest stable version</a>")
+        .content("You are not using the latest stable version")
         .hideDelay(3000)
         .position("bottom right")
       );
@@ -25,6 +27,14 @@ function AlertsService($mdToast) {
       $mdToast.show(
         $mdToast.simple()
         .content("Login info saved successfully!")
+        .hideDelay(3000)
+        .position("bottom right")
+      );
+    },
+    loginError: () => {
+      $mdToast.show(
+        $mdToast.simple()
+        .content("Username, password, and filepaths required to save login")
         .hideDelay(3000)
         .position("bottom right")
       );

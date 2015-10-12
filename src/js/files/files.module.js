@@ -1,4 +1,4 @@
-import "./filesService";
+import FilesService from "./filesService";
 
 (() => {
   "use strict";

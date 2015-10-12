@@ -1,10 +1,10 @@
-(function() {
+(() => {
   "use strict";
 
-  var argv = require("yargs").argv;
+  const argv = require("yargs").argv;
 
-  var distFolder = "./dist/";
-  var srcFolder = {
+  const distFolder = "./dist/";
+  const srcFolder = {
     "main": "./src/",
     "js": "./src/js/",
     "css": "./src/css/",
@@ -13,7 +13,7 @@
     "images": "./src/images/"
   };
 
-  var dist = {
+  let dist = {
     "main": distFolder,
     "js": distFolder + "script.min.js",
     "template": "./tmp/templates/",
@@ -25,7 +25,7 @@
     "module": "modwatchuploader"
   };
 
-  var src = {
+  let src = {
     "js": [
       srcFolder.js + "*.module.js",
       srcFolder.js + "**/*.module.js",
@@ -52,28 +52,32 @@
     ]
   };
 
-  var deploy = {
+  let deploy = {
     platform: argv.platform || "win32",
     arch: argv.arch || "ia32",
-    version: argv.version || "0.32.2",
+    version: argv.version || "0.33.7",
     ignore: [
       "node_modules",
       "gulpfile.js",
       "tasks",
       "gulpconfig.js",
       "legacy",
-      "src"
+      "src",
+      "bower_components",
+      "deploy",
+      "ModwatchUploader-win32-ia32",
+      "dist/script.min.js.map"
     ]
   };
 
-  var electronDeps = "var ipc = require(\"ipc\");var clipboard = require(\"clipboard\");"
+  const electronModules = "var ipc = require(\"ipc\");var clipboard = require(\"clipboard\");";
 
   module.exports = {
     dist: dist,
     src: src,
     srcFolder: srcFolder,
     deploy: deploy,
-    electronDeps: electronDeps
+    electronModules: electronModules
   };
 
 })();
