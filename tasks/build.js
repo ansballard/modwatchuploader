@@ -6,6 +6,7 @@
   const babel = require("gulp-babel");
   const source = require("vinyl-source-stream");
   const buffer = require("vinyl-buffer");
+  const globby = require("globby");
   const browserify = require("browserify");
   const babelify = require("babelify");
   const uglify = require("gulp-uglify");
@@ -17,7 +18,9 @@
   const config = require("../gulpconfig");
 
   gulp.task("buildJS", ["cleanJS", "cacheTemplates"], () => {
-    return browserify(config.src.browserify, {debug: true})
+    return browserify(config.src.browserify, {
+        debug: true
+      })
       .transform(babelify)
       .bundle()
       .pipe(source("script.min.js"))
@@ -27,25 +30,25 @@
       .pipe(uglify())
       .pipe(header(config.electronDeps))
       .pipe(sourcemaps.write("./"))
-      .pipe(gulp.dest(config.dist.main))
-    ;
-    /*return gulp.src(config.src.js.concat(config.dist.template))
-      .pipe(plumber())
-      .pipe(sourcemaps.init())
-      .pipe(babel())
-      .pipe(ngAnnotate())
-      .pipe(uglify())
-      .pipe(concat("script.min.js"))
-      .pipe(sourcemaps.write("./"))
-      .pipe(gulp.dest(config.dist.main))
-    ;*/
+      .pipe(gulp.dest(config.dist.main));
+  });
+
+  gulp.task("buildSpecs", ["cleanSpecs"], () => {
+
+    return browserify({
+        entries: globby.sync(config.src.specs),
+        debug: true,
+        transform: [babelify]
+      }).bundle()
+      .pipe(source('specs.min.js'))
+      .pipe(buffer())
+      .pipe(gulp.dest(config.dist.specs));
   });
 
   gulp.task("buildNode", ["cleanNode"], () => {
     return gulp.src(config.src.node)
       .pipe(plumber())
-      .pipe(gulp.dest(config.dist.node))
-    ;
+      .pipe(gulp.dest(config.dist.node));
   });
 
   gulp.task("buildCSS", ["cleanCSS"], () => {
@@ -53,8 +56,7 @@
       .pipe(plumber())
       .pipe(cssmin())
       .pipe(concat("style.min.css"))
-      .pipe(gulp.dest(config.dist.main))
-    ;
+      .pipe(gulp.dest(config.dist.main));
   });
 
   gulp.task("build", ["buildJS", "buildCSS", "buildNode"]);

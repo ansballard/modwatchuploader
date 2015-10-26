@@ -4,7 +4,7 @@ import "../../tmp/templates/templates"
 
 import "./ng.module"; // legacy
 
-import RouteConfig from "./routeConfig";
+import RouteConfig from "./routes/routeConfig";
 
 import "./api/api.module";
 import "./files/files.module";

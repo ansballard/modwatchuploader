@@ -16,6 +16,7 @@
   let dist = {
     "main": distFolder,
     "js": distFolder + "script.min.js",
+    "specs": "./tmp/specs/",
     "template": "./tmp/templates/",
     "css": distFolder + "style.min.css",
     "node": "./",
@@ -32,7 +33,8 @@
       srcFolder.js + "*.js",
       srcFolder.js + "**/*.js"
     ],
-    "browserify": "./src/js/modwatchuploader.module.js",
+    "browserify": srcFolder.js + "modwatchuploader.module.js",
+    "specs": srcFolder.js + "**/_tests/*Spec.js",
     "template": [
       srcFolder.js + "*.template.html",
       srcFolder.js + "**/*.template.html"
