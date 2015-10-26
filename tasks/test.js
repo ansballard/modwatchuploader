@@ -8,6 +8,7 @@
     new karma({
       configFile: __dirname + "/../karma.conf.js",
       browsers: ["PhantomJS"],
+      reporters: ["spec"],
       singleRun: true
     }, (e) => {
       done();
