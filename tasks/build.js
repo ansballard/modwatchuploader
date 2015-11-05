@@ -27,7 +27,7 @@
       .pipe(buffer())
       .pipe(plumber())
       .pipe(sourcemaps.init())
-      .pipe(uglify())
+      //.pipe(uglify())
       .pipe(header(config.electronDeps))
       .pipe(sourcemaps.write("./"))
       .pipe(gulp.dest(config.dist.main));

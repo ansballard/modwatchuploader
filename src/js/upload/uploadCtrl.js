@@ -1,8 +1,8 @@
-UploadCtrl.$inject = ["APIService", "AlertsService"];
+UploadCtrl.$inject = ["$scope", "APIService", "AlertsService"];
 
 export default UploadCtrl;
 
-function UploadCtrl(APIService, AlertsService) {
+function UploadCtrl($scope, APIService, AlertsService) {
   let vm = this;
 
   vm.scriptVersion = "0.3.2";
@@ -146,7 +146,7 @@ function UploadCtrl(APIService, AlertsService) {
     }
     vm.files = tmp;
     console.log(vm.files);
-    vm.$digest();
+    $scope.$digest();
   });
 
   vm.saveUser = () => {

@@ -1,5 +1,8 @@
 import "angular";
 import "angular-route";
+import "angular-aria";
+import "angular-animate";
+import "../../deps/angular-material.min.js";
 import "../../tmp/templates/templates"
 
 import "./ng.module"; // legacy

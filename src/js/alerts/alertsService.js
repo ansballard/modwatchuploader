@@ -1,5 +1,3 @@
-import "angular-material";
-
 AlertsService.$inject = ["$mdToast"];
 
 export default AlertsService;

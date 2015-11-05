@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.3 (11/2/2015)
+
+**Implemented Enhancements**
+
+- https paths in API
+- Angular Material version bumped to 1.0.0-rc
+- Cleaned up file reading
+
+**Bugs Fixed**
+
+- Various template tweaks
+
 ## 0.3.2 (10/4/2015)
 
 **Implemented Enhancements**

@@ -1,4 +1,7 @@
-<md-content layout="column" layout-align="left center" style="margin: 0 50px;">
+<md-toolbar md-scroll-shrink>
+    <div class="md-toolbar-tools">Modwat.ch</div>
+  </md-toolbar>
+<md-content class="md-padding">
   <section layout="row">
     <md-input-container flex>
       <label>Username</label>
@@ -19,60 +22,62 @@
       <input aria-label="Profile Tag" type="text" ng-model="vm.userInfo.enb" />
     </md-input-container>
   </section>
-  <md-tabs md-dynamic-height md-selected="vm.currentTab">
-    <md-tab label="Mod Organizer">
-      <div layout="row">
-        <md-button aria-label="Get MO Profile Folder" class="md-fab md-raised md-primary" ng-click="vm.mo.getFiles()">
-          <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
-            <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"></path>
-          </svg>
-        </md-button>
-        <md-input-container class="full-width">
-          <label>Mod Profile Directory</label>
-          <input aria-label="MO Profile Path" type="text" ng-model="vm.mo.filepath" />
-        </md-input-container>
-      </div>
-    </md-tab>
-    <md-tab label="Nexus Mod Manager">
-      <div layout="row">
-        <md-button aria-label="Get Plugins File" class="md-fab md-raised md-primary" ng-click="vm.nmm.getPluginsFile()">
-          <ng-md-icon>
-            <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+  <section layout="center center" flex>
+    <md-tabs md-dynamic-height md-selected="vm.currentTab" style="flex:1">
+      <md-tab label="Mod Organizer">
+        <div layout="row">
+          <md-button aria-label="Get MO Profile Folder" class="md-fab md-raised md-primary" ng-click="vm.mo.getFiles()">
+            <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
               <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"></path>
             </svg>
-          </ng-md-icon>
-        </md-button>
-        <md-input-container class="full-width" flex>
-          <label>plugins.txt directory</label>
-          <input aria-label="Plugins.txt File Path" type="text" ng-model="vm.nmm.pluginsPath" />
-        </md-input-container>
-      </div>
-      <div layout="row">
-        <md-button aria-label="Get Ini Files" class="md-fab md-raised md-primary" ng-click="vm.nmm.getIniFiles()">
-          <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
-            <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"></path>
-          </svg>
-        </md-button>
-        <md-input-container class="full-width" flex>
-          <label>ini file directory</label>
-          <input aria-label="Ini File Path" type="text" ng-model="vm.nmm.iniPath" />
-        </md-input-container>
-      </div>
-    </md-tab>
-  </md-tabs>
+          </md-button>
+          <md-input-container class="full-width" flex>
+            <label>Mod Profile Directory</label>
+            <input aria-label="MO Profile Path" type="text" ng-model="vm.mo.filepath" />
+          </md-input-container>
+        </div>
+      </md-tab>
+      <md-tab label="Nexus Mod Manager">
+        <div layout="row">
+          <md-button aria-label="Get Plugins File" class="md-fab md-raised md-primary" ng-click="vm.nmm.getPluginsFile()">
+            <ng-md-icon>
+              <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"></path>
+              </svg>
+            </ng-md-icon>
+          </md-button>
+          <md-input-container class="full-width" flex>
+            <label>plugins.txt directory</label>
+            <input aria-label="Plugins.txt File Path" type="text" ng-model="vm.nmm.pluginsPath" />
+          </md-input-container>
+        </div>
+        <div layout="row">
+          <md-button aria-label="Get Ini Files" class="md-fab md-raised md-primary" ng-click="vm.nmm.getIniFiles()">
+            <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+              <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"></path>
+            </svg>
+          </md-button>
+          <md-input-container class="full-width" flex>
+            <label>ini file directory</label>
+            <input aria-label="Ini File Path" type="text" ng-model="vm.nmm.iniPath" />
+          </md-input-container>
+        </div>
+      </md-tab>
+    </md-tabs>
+  </section>
   <section layout="row" layout-align="center">
     <md-chips ng-model="vm.files" readonly="true">
       <md-chip-template>{{$chip.display}}</md-chip-template>
     </md-chips>
   </section>
-  <div layout="row" layout-align="center">
+  <div layout="row" layout-align="center center" flex>
     <md-button aria-label="Save Login Info" class="md-fab md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password" ng-click="vm.saveUser()">
-      <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+      <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
         <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
       </svg>
     </md-button>
     <md-button aria-label="Upload to Modwatch" class="md-fab md-raised md-primary" ng-disabled="!vm.canUpload()" ng-click="vm.uploadMods()">
-      <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+      <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
         <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
       </svg>
     </md-button>

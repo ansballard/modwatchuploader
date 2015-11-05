@@ -61,38 +61,38 @@
         files.fileDir = dialog.showOpenDialog({
           properties: ["openDirectory"],
           title: "Find your mod profile folder"
-        });
+        })[0];
       }
 
       try {
-        files.plugins = fs.readFileSync(files.fileDir + "/plugins.txt", "utf8").split("\r\n");
+        files.plugins = readFile(files.fileDir, "plugins.txt");
       }
       catch(e) {
         console.log("plugins read failed:", e);
       }
       try {
-        files.modlist = fs.readFileSync(files.fileDir + "/modlist.txt", "utf8").split("\r\n");
+        files.modlist = readFile(files.fileDir, "modlist.txt");
       }
       catch(e) {
         console.log("plugins read failed:", e);
       }
       try {
-        files.ini = fs.readFileSync(files.fileDir + "/skyrim.ini", "utf8").split("\r\n");
+        files.ini = readFile(files.fileDir, "skyrim.ini");
       }
       catch(e) {
         console.log("plugins read failed:", e);
       }
       try {
-        files.prefsini = fs.readFileSync(files.fileDir + "/skyrimprefs.ini", "utf8").split("\r\n");
+        files.prefsini = readFile(files.fileDir, "skyrimprefs.ini");
       }
       catch(e) {
         console.log("plugins read failed:", e);
       }
 
-      cleanArray(files.plugins);
-      cleanArray(files.modlist);
-      cleanArray(files.ini);
-      cleanArray(files.prefsini);
+      files.plugins = cleanArray(files.plugins);
+      files.modlist = cleanArray(files.modlist);
+      files.ini = cleanArray(files.ini);
+      files.prefsini = cleanArray(files.prefsini);
 
       mainWindow.webContents.send("filesread", JSON.stringify(files));
       mainWindow.webContents.send("mo.filepath", files.fileDir);
@@ -101,7 +101,6 @@
     nmm.getPlugins = (filepath) => {
       let files = {
         plugins: [],
-        modlist: [],
         fileDir: ""
       };
       if(typeof filepath !== "undefined") {
@@ -110,17 +109,17 @@
         files.fileDir = dialog.showOpenDialog({
           properties: ["openDirectory"],
           title: "Find your plugins.txt folder"
-        });
+        })[0];
       }
 
       try {
-        files.plugins = fs.readFileSync(files.fileDir + "/plugins.txt", "utf8").split("\n");
+        files.plugins = readFile(files.fileDir, "plugins.txt");
       }
       catch(e) {
         console.log("plugins read failed:", e);
       }
 
-      cleanArray(files.plugins);
+      files.plugins = cleanArray(files.plugins);
 
       mainWindow.webContents.send("filesread", JSON.stringify(files));
       mainWindow.webContents.send("nmm.pluginsFile", files.fileDir);
@@ -139,24 +138,24 @@
         files.fileDir = dialog.showOpenDialog({
           properties: ["openDirectory"],
           title: "Find your .ini files"
-        });
+        })[0];
       }
 
       try {
-        files.ini = fs.readFileSync(files.fileDir + "/skyrim.ini", "utf8").split("\n");
+        files.ini = readFile(files.fileDir, "skyrim.ini");
       }
       catch(e) {
         console.log("ini read failed:", e);
       }
       try {
-        files.prefsini = fs.readFileSync(files.fileDir + "/skyrimprefs.ini", "utf8").split("\n");
+        files.prefsini = readFile(files.fileDir, "skyrimprefs.ini");
       }
       catch(e) {
         console.log("prefsini read failed:", e);
       }
 
-      cleanArray(files.ini);
-      cleanArray(files.prefsini);
+      files.ini = cleanArray(files.ini);
+      files.prefsini = cleanArray(files.prefsini);
 
       mainWindow.webContents.send("filesread", JSON.stringify(files));
       mainWindow.webContents.send("nmm.iniFiles", files.fileDir);
@@ -185,10 +184,22 @@
       if(typeof arr !== "undefined") {
         for(let i = 0; i < arr.length; i++) {
           if(arr[i] === "") {
-            arr.splice(i, 1);
-            i--;
+            arr.splice(i--, 1);
           }
         }
+      } else {
+        arr = [];
+      }
+      return arr;
+    }
+
+    function readFile(path, filename) {
+
+      let content = fs.readFileSync(path + "/" + filename, "utf8");
+      if(content.indexOf("\r\n") > -1) {
+        return content.split("\r\n");
+      } else {
+        return content.split("\n");
       }
     }
 
