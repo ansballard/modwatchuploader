@@ -72,7 +72,7 @@
     ]
   };
 
-  const electronModules = "var ipc = require(\"ipc\");var clipboard = require(\"clipboard\");";
+  const electronModules = "var ipc = require(\"ipc\");var clipboard = require(\"clipboard\");var shell = require(\"shell\");";
 
   module.exports = {
     dist: dist,

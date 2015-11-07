@@ -5,7 +5,15 @@ export default AlertsService;
 function AlertsService($mdToast) {
 
   return {
-    badVersion: () => {
+    show(message) {
+      $mdToast.show(
+        $mdToast.simple()
+        .content(message)
+        .hideDelay(3000)
+        .position("bottom right")
+      );
+    },
+    badVersion() {
       $mdToast.show(
         $mdToast.simple()
         .content("You are not using the latest stable version")
@@ -13,7 +21,7 @@ function AlertsService($mdToast) {
         .position("bottom right")
       );
     },
-    serverDown: () => {
+    serverDown() {
       $mdToast.show(
         $mdToast.simple()
         .content("The modwat.ch api server is not responding")
@@ -21,7 +29,7 @@ function AlertsService($mdToast) {
         .position("bottom right")
       );
     },
-    loginSuccess: () => {
+    loginSuccess() {
       $mdToast.show(
         $mdToast.simple()
         .content("Login info saved successfully!")
@@ -29,7 +37,7 @@ function AlertsService($mdToast) {
         .position("bottom right")
       );
     },
-    loginError: () => {
+    loginError() {
       $mdToast.show(
         $mdToast.simple()
         .content("Username, password, and filepaths required to save login")
@@ -37,7 +45,7 @@ function AlertsService($mdToast) {
         .position("bottom right")
       );
     },
-    uploadSuccess: () => {
+    uploadSuccess() {
       $mdToast.show(
         $mdToast.simple()
         .content("Mods uploaded successfully!")
@@ -45,7 +53,7 @@ function AlertsService($mdToast) {
         .position("bottom right")
       );
     },
-    uploadError: () => {
+    uploadError() {
       $mdToast.show(
         $mdToast.simple()
         .content("Upload failed")

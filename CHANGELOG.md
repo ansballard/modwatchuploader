@@ -7,6 +7,13 @@
 - https paths in API
 - Angular Material version bumped to 1.0.0-rc
 - Cleaned up file reading
+- Switched to class method syntax
+- Move persistence to separate module
+  - Add profiles
+  - Login info same for all profiles
+  - Account username restrictions
+- Login/Create account screen
+- Stretch tab selectors to fill screen
 
 **Bugs Fixed**
 

@@ -17,9 +17,14 @@
 
 <body ng-app="modwatchuploader" ng-jq>
   <div ng-view layout="column" flex layout-fill ng-cloak>Loading...</div>
+  <script type="text/javascript" src="node_modules/angular/angular.js"></script>
+  <script type="text/javascript" src="node_modules/angular-aria/angular-aria.js"></script>
+  <script type="text/javascript" src="node_modules/angular-route/angular-route.js"></script>
+  <script type="text/javascript" src="node_modules/angular-animate/angular-animate.js"></script>
+  <script type="text/javascript" src="deps/angular-material.min.js"></script>
   <!-- inject:js -->
-  <script type="text/javascript">var ipc = require("ipc");var clipboard = require("clipboard");</script>
-<script type="text/javascript" src="dist/script.min.js?hash=05286daad39d50861797788bb09dbfbe"></script>
+  <script type="text/javascript">var ipc = require("ipc");var clipboard = require("clipboard");var shell = require("shell");</script>
+<script type="text/javascript" src="dist/script.min.js?hash=b467e825e06d5d8090f31c38408589d7"></script>
   <!-- endinject -->
 </body>
 

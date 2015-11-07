@@ -1,11 +1,10 @@
-UploadCtrl.$inject = ["$scope", "APIService", "AlertsService"];
+UploadCtrl.$inject = ["$scope", "APIService", "AlertsService", "FilesService", "PersistenceService"];
 
 export default UploadCtrl;
 
-function UploadCtrl($scope, APIService, AlertsService) {
+function UploadCtrl($scope, APIService, AlertsService, FilesService, PersistenceService) {
   let vm = this;
 
-  vm.scriptVersion = "0.3.2";
   vm.mo = {
     filepath: undefined
   };
@@ -29,15 +28,6 @@ function UploadCtrl($scope, APIService, AlertsService) {
     }
     return true;
   };
-
-  APIService.getCurrentVersion().then(
-    (res) => {
-      if (vm.scriptVersion !== res) {
-        AlertsService.badVersion();
-      }
-    },
-    AlertsService.serverDown
-  );
 
   vm.userInfo = {
     username: window.localStorage.getItem("modwatch.username") || "",
@@ -83,9 +73,9 @@ function UploadCtrl($scope, APIService, AlertsService) {
     if (username !== "") {
       APIService.getUserInfo(username).then(
         (info) => {
-          vm.userInfo.enb = info.enb;
-          vm.userInfo.tag = info.tag;
-          vm.userInfo.game = info.game;
+          vm.userInfo.enb = info.data.enb;
+          vm.userInfo.tag = info.data.tag;
+          vm.userInfo.game = info.data.game;
         }, (err) => {
           console.log(err);
         }
@@ -144,19 +134,19 @@ function UploadCtrl($scope, APIService, AlertsService) {
         ref: "prefsini"
       });
     }
-    vm.files = tmp;
-    console.log(vm.files);
-    $scope.$digest();
+    $scope.$digest(() => {
+      vm.files = tmp;
+    });
   });
 
   vm.saveUser = () => {
     if (vm.canUpload()) {
-      window.localStorage.setItem("modwatch.username", userInfo.username);
-      window.localStorage.setItem("modwatch.password", userInfo.password);
-      window.localStorage.setItem("modwatch.mo_filepath", mo.filepath || "");
-      window.localStorage.setItem("modwatch.nmm_pluginsPath", nmm.pluginsPath || "");
-      window.localStorage.setItem("modwatch.nmm_iniPath", nmm.iniPath || "");
-      window.localStorage.setItem("modwatch.program", currentTab === 0 ? "MO" : "NMM");
+      window.localStorage.setItem("modwatch.username", vm.userInfo.username);
+      window.localStorage.setItem("modwatch.password", vm.userInfo.password);
+      window.localStorage.setItem("modwatch.mo_filepath", vm.mo.filepath || "");
+      window.localStorage.setItem("modwatch.nmm_pluginsPath", vm.nmm.pluginsPath || "");
+      window.localStorage.setItem("modwatch.nmm_iniPath", vm.nmm.iniPath || "");
+      window.localStorage.setItem("modwatch.program", vm.currentTab === 0 ? "MO" : "NMM");
       AlertsService.loginSuccess();
     } else {
       AlertsService.loginError();
