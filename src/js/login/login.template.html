@@ -4,37 +4,37 @@
 <md-content class="md-padding">
   <section layout="center center" flex>
     <md-tabs md-dynamic-height md-selected="vm.currentTab" style="flex:1" md-stretch-tabs="always">
-      <md-tab label="Login">
-        <md-input-container flex>
-          <label>Username</label>
-          <input aria-label="Username" required type="text" ng-blur="vm.checkUsernameLogin(vm.login.username)" ng-model="vm.login.username" />
-        </md-input-container>
-        <md-input-container flex>
-          <label>Password</label>
-          <input aria-label="Password" required type="password" ng-model="vm.login.password" />
-        </md-input-container>
+      <md-tab label="Login" md-on-select="loginForm.$setUntouched()">
+        <form name="loginForm">
+          <md-input-container flex>
+            <label>Username</label>
+            <input aria-label="Username" required type="text" ng-blur="vm.checkUsernameLogin(vm.login.username)" ng-model="vm.login.username" />
+          </md-input-container>
+          <md-input-container flex>
+            <label>Password</label>
+            <input aria-label="Password" required type="password" ng-model="vm.login.password" />
+          </md-input-container>
+        </form>
         <div layout="row" layout-align="center center" flex>
-          <md-button aria-label="Login" class="md-fab md-raised md-primary" ng-disabled="!vm.canLogin()" ng-click="vm.logIn()">
-            <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
-              <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
-            </svg>
+          <md-button aria-label="Login" class="md-raised md-primary" ng-disabled="!vm.canLogin()" ng-click="vm.logIn()">
+            Login
           </md-button>
         </div>
       </md-tab>
-      <md-tab label="Create Account">
-        <md-input-container flex>
-          <label>Username</label>
-          <input aria-label="Username" required type="text" ng-blur="vm.checkUsernameCreate(vm.create.username)" ng-model="vm.create.username" />
-        </md-input-container>
-        <md-input-container flex>
-          <label>Password</label>
-          <input aria-label="Password" required type="password" ng-model="vm.create.password" />
-        </md-input-container>
+      <md-tab label="Create Account" md-on-select="createForm.$setUntouched()">
+        <form name="createForm">
+          <md-input-container flex>
+            <label>Username</label>
+            <input aria-label="Username" required type="text" ng-blur="vm.checkUsernameCreate(vm.create.username)" ng-model="vm.create.username" />
+          </md-input-container>
+          <md-input-container flex>
+            <label>Password</label>
+            <input aria-label="Password" required type="password" ng-model="vm.create.password" />
+          </md-input-container>
+        </form>
         <div layout="row" layout-align="center center" flex>
-          <md-button aria-label="Create Account" class="md-fab md-raised md-primary" ng-disabled="!vm.canCreate()" ng-click="vm.createAccount()">
-            <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
-              <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
-            </svg>
+          <md-button aria-label="Create Account" class="md-raised md-primary" ng-disabled="!vm.canCreate()" ng-click="vm.createAccount()">
+            Create
           </md-button>
         </div>
       </md-tab>
@@ -51,14 +51,6 @@
             <p>{{ commit.message }}</p>
           </div>
         </a>
-      </md-list-item>
-      <md-list-item>
-        <md-subheader class="md-no-sticky">Modwatch API Status</md-subheader>
-        <div class="md-list-item-text" layout="column">
-          <h3>{{ commit.author }}</h3>
-          <h4>{{ commit.timestamp|date}}</h4>
-          <p>{{ commit.message }}</p>
-        </div>
       </md-list-item>
     </md-list>
   </section>

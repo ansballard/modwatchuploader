@@ -8,7 +8,7 @@ function LoginCtrl($q, $location, Constants, APIService, AlertsService, Persiste
 
   vm.createAccount = createAccount;
   vm.logIn = logIn;
-  vm.login = PersistenceService.getLogin();
+  vm.login = PersistenceService.getUser();
   vm.create = {
     "username": "",
     "password": ""

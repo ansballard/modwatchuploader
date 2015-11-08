@@ -1,30 +1,46 @@
 <md-toolbar md-scroll-shrink>
-    <div class="md-toolbar-tools">Modwat.ch</div>
-  </md-toolbar>
+  <div class="md-toolbar-tools">
+    <h2>
+      <span>Modwat.ch</span>
+    </h2>
+    <span flex></span>
+    <md-button class="md-raised" style="color: #000000" ng-click="vm.logOut()" aria-label="Log Out">
+      Log Out
+    </md-button>
+  </div>
+</md-toolbar>
 <md-content class="md-padding">
   <section layout="row">
     <md-input-container flex>
-      <label>Username</label>
-      <input aria-label="Username" required type="text" ng-model="vm.userInfo.username" />
+      <label>Profile</label>
+      <md-select ng-model="vm.view.currentProfile" aria-label="Select a Profile" ng-change="vm.switchProfile(vm.view.currentProfile)">
+        <md-option ng-repeat="profile in vm.profiles">
+          {{profile}}
+        </md-option>
+      </md-select>
     </md-input-container>
     <md-input-container flex>
-      <label>Password</label>
-      <input aria-label="Password" required type="password" ng-model="vm.userInfo.password" />
+      <label>Games</label>
+      <md-select ng-model="vm.view.game" aria-label="Select a Game" ng-change="vm.setGame(vm.view.game)">
+        <md-option ng-repeat="game in vm.games" value="{{game.val}}">
+          {{game.display}}
+        </md-option>
+      </md-select>
     </md-input-container>
   </section>
   <section layout="row">
     <md-input-container flex>
       <label>Tag</label>
-      <input type="text" ng-model="vm.userInfo.tag" />
+      <input aria-label="Profile Tag" type="text" ng-model="vm.view.tag" ng-blur="vm.setTag(vm.view.tag)" />
     </md-input-container>
     <md-input-container flex>
       <label>ENB</label>
-      <input aria-label="Profile Tag" type="text" ng-model="vm.userInfo.enb" />
+      <input aria-label="Profile ENB" type="text" ng-model="vm.view.enb" ng-blur="vm.setEnb(vm.view.enb)" />
     </md-input-container>
   </section>
   <section layout="center center" flex>
     <md-tabs md-dynamic-height md-selected="vm.currentTab" style="flex:1" md-stretch-tabs="always">
-      <md-tab label="Mod Organizer">
+      <md-tab label="Mod Organizer" md-on-select="vm.setDefaultManager('MO')">
         <div layout="row">
           <md-button aria-label="Get MO Profile Folder" class="md-fab md-raised md-primary" ng-click="vm.mo.getFiles()">
             <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
@@ -33,11 +49,11 @@
           </md-button>
           <md-input-container class="full-width" flex>
             <label>Mod Profile Directory</label>
-            <input aria-label="MO Profile Path" type="text" ng-model="vm.mo.filepath" />
+            <input aria-label="MO Profile Path" type="text" ng-model="vm.profile.mo.path" readonly />
           </md-input-container>
         </div>
       </md-tab>
-      <md-tab label="Nexus Mod Manager">
+      <md-tab label="Nexus Mod Manager" md-on-select=vm.setDefaultManager('NMM')>
         <div layout="row">
           <md-button aria-label="Get Plugins File" class="md-fab md-raised md-primary" ng-click="vm.nmm.getPluginsFile()">
             <ng-md-icon>
@@ -48,7 +64,7 @@
           </md-button>
           <md-input-container class="full-width" flex>
             <label>plugins.txt directory</label>
-            <input aria-label="Plugins.txt File Path" type="text" ng-model="vm.nmm.pluginsPath" />
+            <input aria-label="Plugins.txt File Path" type="text" ng-model="vm.profile.nmm.pluginsPath" readonly />
           </md-input-container>
         </div>
         <div layout="row">
@@ -59,7 +75,7 @@
           </md-button>
           <md-input-container class="full-width" flex>
             <label>ini file directory</label>
-            <input aria-label="Ini File Path" type="text" ng-model="vm.nmm.iniPath" />
+            <input aria-label="Ini File Path" type="text" ng-model="vm.profile.nmm.iniPath" readonly />
           </md-input-container>
         </div>
       </md-tab>
@@ -71,15 +87,14 @@
     </md-chips>
   </section>
   <div layout="row" layout-align="center center" flex>
-    <md-button aria-label="Save Login Info" class="md-fab md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password" ng-click="vm.saveUser()">
-      <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
-        <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"></path>
-      </svg>
+    <md-button aria-label="Add Profile" class="md-raised md-primary" ng-click="vm.addProfile()">
+      Add Profile
     </md-button>
-    <md-button aria-label="Upload to Modwatch" class="md-fab md-raised md-primary" ng-disabled="!vm.canUpload()" ng-click="vm.uploadMods()">
-      <svg style="fill: #FFFFFF" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
-        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
-      </svg>
+    <md-button aria-label="Delete Profile" class="md-raised md-warn" ng-disabled="!vm.view.currentProfile" ng-click="vm.deleteProfile()">
+      Delete Profile
+    </md-button>
+    <md-button aria-label="Upload to Modwatch" class="md-raised md-primary" ng-disabled="!vm.canUpload()" ng-click="vm.uploadMods()">
+      Upload
     </md-button>
   </div>
 </md-content>

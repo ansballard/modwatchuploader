@@ -1,28 +1,42 @@
-UploadCtrl.$inject = ["$scope", "APIService", "AlertsService", "FilesService", "PersistenceService"];
+UploadCtrl.$inject = ["$scope", "$location", "APIService", "AlertsService", "FilesService", "PersistenceService"];
 
 export default UploadCtrl;
 
-function UploadCtrl($scope, APIService, AlertsService, FilesService, PersistenceService) {
+function UploadCtrl($scope, $location, APIService, AlertsService, FilesService, PersistenceService) {
   let vm = this;
 
-  vm.mo = {
-    filepath: undefined
-  };
-  vm.nmm = {
-    pluginsPath: undefined,
-    iniPath: undefined
-  };
-  vm.currentTab = 0;
+  vm.logOut = logOut;
+  vm.profiles = PersistenceService.getProfiles();
+  vm.profile = {mo: {}, nmm: {}};
+  vm.user = PersistenceService.getUser();
+
+  vm.switchProfile = switchProfile;
+  vm.setGame = setGame;
+  vm.setEnb = setEnb;
+  vm.setTag = setTag;
+  vm.setDefaultManager = setDefaultManager;
+  vm.games = [
+    {
+      "display": "Skyrim",
+      "val": "skyrim"
+    },
+    {
+      "display": "Fallout",
+      "val": "fallout"
+    }
+  ];
+  vm.view = {};
+  vm.currentTab = (vm.profile.program) === "NMM" ? 1 : 0;
   vm.canUpload = () => {
-    if (vm.userInfo.username === "" || vm.userInfo.password === "") {
+    if(!vm.profile.game) {
       return false;
     }
     if (vm.currentTab === 0) {
-      if (typeof vm.mo.filepath === "undefined") {
+      if (typeof vm.profile.mo.path === "undefined") {
         return false;
       }
     } else {
-      if (typeof vm.nmm.pluginsPath === "undefined" || typeof vm.nmm.iniPath === "undefined") {
+      if (typeof vm.profile.nmm.pluginsPath === "undefined" || (vm.profile.game !== "fallout" && typeof vm.profile.nmm.iniPath === "undefined")) {
         return false;
       }
     }
@@ -40,35 +54,55 @@ function UploadCtrl($scope, APIService, AlertsService, FilesService, Persistence
     ini: [],
     prefsini: []
   };
-  if (window.localStorage.getItem("modwatch.program") === "NMM") {
-    vm.currentTab = 1;
-  }
-  if (vm.currentTab === 0) {
-    if (window.localStorage.getItem("modwatch.mo_filepath")) {
-      vm.mo.filepath = window.localStorage.getItem("modwatch.mo_filepath") || "";
-      vm.files = [];
-      if (vm.mo.filepath !== "" && vm.mo.filepath !== null) {
-        FilesService.getFiles.mo(vm.mo.filepath)
-        ipc.send("mo.getFilesNoDialog", vm.mo.filepath); // FilesService
-      }
-    }
-  } else {
-    if (window.localStorage.getItem("modwatch.nmm_pluginsPath")) {
-      vm.nmm.pluginsPath = window.localStorage.getItem("modwatch.nmm_pluginsPath") || "";
-      vm.files = [];
-      if (vm.mo.filepath !== "" && vm.mo.filepath !== null) {
-        ipc.send("nmm.getPluginsFileNoDialog", vm.nmm.pluginsPath); // FilesService
-      }
-    }
-    if (window.localStorage.getItem("modwatch.nmm_iniPath")) {
-      vm.nmm.iniPath = window.localStorage.getItem("modwatch.nmm_iniPath") || "";
-      vm.files = [];
-      if (vm.nmm.iniPath !== "" && vm.mo.filepath !== null) {
-        ipc.send("nmm.getIniFilesNoDialog", vm.nmm.iniPath); // FilesService
-      }
-    }
-  }
 
+  function readFiles(profile) {
+    vm.files = [];
+    if (profile.program === "MO") {
+      if (profile.mo.path) {
+        if (profile.mo.filepath !== "" && profile.mo.filepath !== null) {
+          //FilesService.getFiles.mo(profile.mo.path)
+          ipc.send("mo.getFilesNoDialog", profile.mo.path);
+        }
+      }
+    } else {
+      if (profile.nmm.pluginsPath) {
+        if (profile.nmm.pluginsPath !== "" && profile.nmm.pluginsPath !== null) {
+          ipc.send("nmm.getPluginsFileNoDialog", profile.nmm.pluginsPath);
+        }
+      }
+      if (profile.nmm.iniPath) {
+        if (profile.nmm.iniPathh !== "" && profile.nmm.iniPath !== null) {
+          ipc.send("nmm.getIniFilesNoDialog", profile.nmm.iniPath);
+        }
+      }
+    }
+  }
+  function logOut() {
+    $location.path("login");
+  }
+  function switchProfile(profileName) {
+    console.log("switchProfile");
+    vm.profile = PersistenceService.switchProfile(profileName.trim());
+    vm.view.game = vm.profile.game;
+    vm.view.tag = vm.profile.tag;
+    vm.view.enb = vm.profile.enb;
+    vm.currentTab = (vm.profile.program) === "NMM" ? 1 : 0;
+    readFiles(vm.profile);
+  }
+  function setGame(game) {
+    vm.profile = PersistenceService.setGame(vm.view.currentProfile.trim(), game);
+  }
+  function setTag(tag) {
+    vm.profile = PersistenceService.setTag(vm.view.currentProfile.trim(), tag);
+  }
+  function setEnb(enb) {
+    vm.profile = PersistenceService.setEnb(vm.view.currentProfile.trim(), enb);
+  }
+  function setDefaultManager(acronym) {
+    if(vm.view.currentProfile) {
+      vm.profile = PersistenceService.setDefaultManager(vm.view.currentProfile.trim(), acronym);
+    }
+  }
   function getUserInfo(username) {
     if (username !== "") {
       APIService.getUserInfo(username).then(
@@ -84,25 +118,27 @@ function UploadCtrl($scope, APIService, AlertsService, FilesService, Persistence
   }
 
   getUserInfo(vm.userInfo.username);
-  vm.mo.getFiles = () => { // FilesService
+  vm.mo = {};
+  vm.nmm = {};
+  vm.mo.getFiles = () => {
     ipc.send("mo.getFiles");
   };
-  vm.nmm.getPluginsFile = () => { // FilesService
+  vm.nmm.getPluginsFile = () => {
     ipc.send("nmm.getPluginsFile");
   };
-  vm.nmm.getIniFiles = () => { // FilesService
+  vm.nmm.getIniFiles = () => {
     ipc.send("nmm.getIniFiles");
   };
-  ipc.on("mo.filepath", (filepath) => { // FilesService
-    vm.mo.filepath = filepath || "";
+  ipc.on("mo.filepath", (path) => {
+    vm.profile = PersistenceService.setMOPath(vm.view.currentProfile.trim(), path || "");
   });
-  ipc.on("nmm.pluginsFile", (filepath) => { // FilesService
-    vm.nmm.pluginsPath = filepath || "";
+  ipc.on("nmm.pluginsFile", (path) => {
+    vm.profile = PersistenceService.setNMMPluginsPath(vm.view.currentProfile.trim(), path || "");
   });
-  ipc.on("nmm.iniFiles", (filepath) => { // FilesService
-    vm.nmm.iniPath = filepath || "";
+  ipc.on("nmm.iniFiles", (path) => {
+    vm.profile = PersistenceService.setNMMIniPath(vm.view.currentProfile.trim(), path || "");
   });
-  ipc.on("filesread", (files) => { // FilesService
+  ipc.on("filesread", (files) => {
     files = JSON.parse(files);
     vm.userInfo.plugins = typeof files.plugins !== "undefined" ? files.plugins : vm.userInfo.plugins;
     vm.userInfo.modlist = typeof files.modlist !== "undefined" ? files.modlist : vm.userInfo.modlist;
