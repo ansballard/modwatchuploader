@@ -15,6 +15,7 @@ function UploadCtrl($scope, $location, APIService, AlertsService, FilesService, 
   vm.setEnb = setEnb;
   vm.setTag = setTag;
   vm.setDefaultManager = setDefaultManager;
+  vm.removeProfile = removeProfile;
   vm.games = [
     {
       "display": "Skyrim",
@@ -102,6 +103,16 @@ function UploadCtrl($scope, $location, APIService, AlertsService, FilesService, 
     if(vm.view.currentProfile) {
       vm.profile = PersistenceService.setDefaultManager(vm.view.currentProfile.trim(), acronym);
     }
+  }
+  function removeProfile(profileName) {
+    profileName = profileName.trim();
+    return APIService.removeProfile(profileName, vm.user.password).then((res) => {
+      console.log(res);
+    }, (err) => {
+      console.log(err);
+    }).catch((e) => {
+      console.log(e);
+    });
   }
   function getUserInfo(username) {
     if (username !== "") {

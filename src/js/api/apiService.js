@@ -36,6 +36,10 @@ function APIService($http) {
         {username: username, password: password}
       );
       //return $http.post("http://127.0.0.1:3001/loadorder", json);
+    },
+    removeProfile(profilename, password) {
+      //return $http.post("https://modwatchapi-ansballard.rhcloud.com/api/user/" + profilename, {password: password});return $http.post("https://modwatchapi-ansballard.rhcloud.com/api/user/" + profilename, {password: password});
+      return $http.post("http://127.0.0.1:3001/auth/remove/" + profilename, {password: password});
     }
   };
 }
