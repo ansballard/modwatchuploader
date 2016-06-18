@@ -1,11 +1,11 @@
-var app = require('app');  // Module to control application life.
-var fs = require("fs");
-var ipc = require("ipc");
-var dialog = require('dialog');
-var BrowserWindow = require('browser-window');  // Module to create native browser window.
+const app = require("electron").app;  // Module to control application life.
+const fs = require("fs");
+const ipc = require("electron").ipcMain;
+const dialog = require("electron").dialog;
+const BrowserWindow = require("electron").BrowserWindow;  // Module to create native browser window.
 
 // Report crashes to our server.
-require('crash-reporter').start();
+// require('crash-reporter').start();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is GCed.
@@ -39,7 +39,7 @@ app.on('ready', function() {
   mainWindow = new BrowserWindow({width: 500, height: 600});
 
   // and load the index.html of the app.
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  mainWindow.loadURL('file://D:/git/Modwatch/legacy-last/index.html');
 
   // Open the devtools.
   //mainWindow.openDevTools();
@@ -74,25 +74,61 @@ app.on('ready', function() {
     }
 
     try {
-      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\n");
+      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8")
+      .split("\r\n")
+      .join("\n")
+      .split("\n")
+      .filter(line => line.trim() !== "")
+      .filter(line => line.indexOf("#") !== 0)
+      .map(line => line
+        .replace(/\\/g, "\\")
+        .replace(/"/g, "\"")
+      );
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      files.modlist = fs.readFileSync(fileDir + "/modlist.txt", "utf8").split("\n");
+      files.modlist = fs.readFileSync(fileDir + "/modlist.txt", "utf8")
+      .split("\r\n")
+      .join("\n")
+      .split("\n")
+      .filter(line => line.trim() !== "")
+      .filter(line => line.indexOf("#") !== 0)
+      .map(line => line
+        .replace(/\\/g, "\\")
+        .replace(/"/g, "\"")
+      );
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\n");
+      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8")
+      .split("\r\n")
+      .join("\n")
+      .split("\n")
+      .filter(line => line.trim() !== "")
+      .filter(line => line.indexOf("#") !== 0)
+      .map(line => line
+        .replace(/\\/g, "\\")
+        .replace(/"/g, "\"")
+      );
     }
     catch(e) {
       console.log("plugins read failed:", e);
     }
     try {
-      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\n");
+      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8")
+      .split("\r\n")
+      .join("\n")
+      .split("\n")
+      .filter(line => line.trim() !== "")
+      .filter(line => line.indexOf("#") !== 0)
+      .map(line => line
+        .replace(/\\/g, "\\")
+        .replace(/"/g, "\"")
+      );
     }
     catch(e) {
       console.log("plugins read failed:", e);
@@ -123,7 +159,16 @@ app.on('ready', function() {
     }
 
     try {
-      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8").split("\n");
+      files.plugins = fs.readFileSync(fileDir + "/plugins.txt", "utf8")
+      .split("\r\n")
+      .join("\n")
+      .split("\n")
+      .filter(line => line.trim() !== "")
+      .filter(line => line.indexOf("#") !== 0)
+      .map(line => line
+        .replace(/\\/g, "\\")
+        .replace(/"/g, "\"")
+      );
     }
     catch(e) {
       console.log("plugins read failed:", e);
@@ -152,13 +197,31 @@ app.on('ready', function() {
     }
 
     try {
-      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8").split("\n");
+      files.ini = fs.readFileSync(fileDir + "/skyrim.ini", "utf8")
+      .split("\r\n")
+      .join("\n")
+      .split("\n")
+      .filter(line => line.trim() !== "")
+      .filter(line => line.indexOf("#") !== 0)
+      .map(line => line
+        .replace(/\\/g, "\\")
+        .replace(/"/g, "\"")
+      );
     }
     catch(e) {
       console.log("ini read failed:", e);
     }
     try {
-      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8").split("\n");
+      files.prefsini = fs.readFileSync(fileDir + "/skyrimprefs.ini", "utf8")
+      .split("\r\n")
+      .join("\n")
+      .split("\n")
+      .filter(line => line.trim() !== "")
+      .filter(line => line.indexOf("#") !== 0)
+      .map(line => line
+        .replace(/\\/g, "\\")
+        .replace(/"/g, "\"")
+      );
     }
     catch(e) {
       console.log("prefsini read failed:", e);

@@ -1,8 +1,12 @@
-(function() {
-    var ipc = require("ipc");
-    var app = angular.module("uploader", ["ngMaterial"]);
+import "angular";
+import "angular-animate";
+import "angular-aria";
+import "angular-material";
+import { ipcRenderer as ipc } from "electron";
 
-    app.controller("MainCtrl", ["$scope", "$mdToast", "AjaxService", function($scope, $mdToast, AjaxService) {
+(function() {
+    angular.module("uploader", ["ngMaterial"])
+    .controller("MainCtrl", ["$scope", "$mdToast", "AjaxService", function($scope, $mdToast, AjaxService) {
       $scope.scriptVersion = {
         local: "1.0",
         global: "0.26b"
@@ -81,7 +85,7 @@
             function(info) {
               $scope.userInfo.enb = info.enb;
               $scope.userInfo.tag = info.tag;
-              $scope.userInfo.game = info.game;
+              $scope.userInfo.game = info.game || "skyrim";
             },
             function(err) {
               console.log(err);
@@ -99,16 +103,16 @@
       $scope.nmm.getIniFiles = function nmm_getIniFiles() {
         ipc.send("nmm.getIniFiles");
       };
-      ipc.on("mo.filepath", function(filepath) {
+      ipc.on("mo.filepath", function(event, filepath) {
         $scope.mo.filepath = filepath || "";
       });
-      ipc.on("nmm.pluginsFile", function(filepath) {
+      ipc.on("nmm.pluginsFile", function(event, filepath) {
         $scope.nmm.pluginsPath = filepath || "";
       });
-      ipc.on("nmm.iniFiles", function(filepath) {
+      ipc.on("nmm.iniFiles", function(event, filepath) {
         $scope.nmm.iniPath = filepath || "";
       });
-      ipc.on("filesread", function(files) {
+      ipc.on("filesread", function(event, files) {
         files = JSON.parse(files);
         $scope.userInfo.plugins = typeof files.plugins !== "undefined" ? files.plugins : $scope.userInfo.plugins;
         $scope.userInfo.modlist = typeof files.modlist !== "undefined" ? files.modlist : $scope.userInfo.modlist;
@@ -148,44 +152,42 @@
         }
       };
 
-      $scope.uploadMods = function uploadMods() {
-        AjaxService.uploadMods($scope.userInfo,
-          function(res) {
-            $mdToast.show({
-              templateUrl: "uploaddonetoast.html",
-              hideDelay: 6000,
-              position: "bottom right"
-            });
-          }, function(err) {
-            console.log(err);
-            $mdToast.show({
-              templateUrl: "serverdowntoast.html",
-              hideDelay: 6000,
-              position: "bottom right"
-            });
-          }
-        );
+      $scope.uploadMods = function() {
+        AjaxService.uploadMods($scope.userInfo)
+        .then(res => {
+          $mdToast.show({
+            templateUrl: "uploaddonetoast.html",
+            hideDelay: 6000,
+            position: "bottom right"
+          });
+        })
+        .catch(err => {
+          $mdToast.show({
+            templateUrl: err.status === 403 ? "badpasswordtoast.html" : "serverdowntoast.html",
+            hideDelay: 6000,
+            position: "bottom right"
+          });
+        });
       };
     }])
     .factory("AjaxService", ["$http", function($http) {
+      // const url = "http://localhost:3001/";
+      const url = "https://modwatchapi-ansballard.rhcloud.com/";
       return {
-        getCurrentVersion: function getCurrentVersion(success, error) {
-          $http.get("http://modwatchapi-ansballard.rhcloud.com/api/script/version")
+        getCurrentVersion(success, error) {
+          $http.get(`${url}api/script/version`)
             .success(success)
             .error(error)
           ;
         },
-        getUserInfo: function getUserInfo(username, success, error) {
-          $http.get("http://modwatchapi-ansballard.rhcloud.com/api/user/" + username + "/profile")
+        getUserInfo(username, success, error) {
+          $http.get(`${url}api/user/${username}/profile`)
             .success(success)
             .error(error)
           ;
         },
-        uploadMods: function uploadMods(json, success, error) {
-          $http.post("http://modwatchapi-ansballard.rhcloud.com/loadorder", json)
-            .success(success)
-            .error(error)
-          ;
+        uploadMods(json) {
+          return $http.post(`${url}loadorder`, json);
         }
       }
     }]);

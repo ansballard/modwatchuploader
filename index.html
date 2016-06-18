@@ -5,18 +5,14 @@
   <title>Modwat.ch Uploader</title>
   <link rel="stylesheet" href="deps/angular-material.min.css">
   <link type="text/css" href="deps/material-icons.css" rel="stylesheet">
-  <script type="text/javascript" src="deps/angular.js"></script>
-  <script type="text/javascript" src="deps/angular-animate.min.js"></script>
-  <script type="text/javascript" src="deps/angular-aria.min.js"></script>
-  <script type="text/javascript" src="deps/angular-material.js"></script>
-  <script type="text/javascript" src="src/js/ng.js"></script>
+  <script type="text/javascript" src="dist/ng.js"></script>
 </head>
 
-<body ng-app="uploader" ng-controller="MainCtrl">
+<body ng-app="uploader" ng-controller="MainCtrl" style="overflow-y: hidden;">
   <md-toolbar style="margin-bottom: 20px;">
     <h1 style="margin-left: 20px;">Modwat.ch Uploader</h1>
   </md-toolbar>
-  <md-content layout="column" layout-align="left center" style="margin: 0 50px;">
+  <md-content layout="column" layout-align="left center" style="margin: 0 50px; overflow-x: hidden;">
     <section layout="row">
       <md-input-container flex>
         <label>Username</label>
@@ -41,14 +37,16 @@
       <md-tab label="Mod Organizer">
         <div layout="row">
           <md-button class="md-fab md-raised md-primary" ng-click="mo.getFiles()">
-            <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
-              <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
-            </svg>
+            <ng-md-icon>
+              <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
+                <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
+              </svg>
+            </ng-md-icon>
             <md-tooltip>
               Your MO mod profile folder
             </md-tooltip>
           </md-button>
-          <md-input-container>
+          <md-input-container flex>
             <label>Mod Profile Directory</label>
             <input type="text" ng-model="mo.filepath" />
           </md-input-container>
@@ -88,13 +86,13 @@
       </md-tab>
     </md-tabs>
     <div layout="row" layout-align="center">
-      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser('NMM')">
+      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser(currentTab)">
         Save
         <md-tooltip>
           Remember your login info
         </md-tooltip>
       </md-button>
-      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || !nmm.pluginsPath || !nmm.iniPath" ng-click="uploadMods()">
+      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || (!nmm.pluginsPath && !mo.filepath)" ng-click="uploadMods()">
         Upload
         <md-tooltip>
           Send to modwat.ch
@@ -120,6 +118,11 @@
   <script type="text/ng-template" id="serverdowntoast.html">
     <md-toast>
       <span flex>The modwat.ch api server is not responding</span>
+    </md-toast>
+  </script>
+  <script type="text/ng-template" id="badpasswordtoast.html">
+    <md-toast>
+      <span flex>Username/Password incorrect</span>
     </md-toast>
   </script>
   <script type="text/ng-template" id="savedinfotoast.html">
