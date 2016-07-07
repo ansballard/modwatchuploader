@@ -1,18 +1,20 @@
 {
   "name": "modwatchuploader",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "index.js",
   "dependencies": {
     "angular": "^1.5.7",
     "angular-animate": "^1.5.7",
     "angular-aria": "^1.5.7",
-    "angular-material": "^0.10.0"
+    "angular-material": "^0.10.0",
+    "denodeify": "^1.2.1"
   },
   "scripts": {
-    "start": "electron ./",
-    "build:js": "browserify ./src/js/ng.js -u electron -t babelify -t partialify -o ./dist/ng.js",
-    "watch:js": "watchify ./src/js/ng.js -u electron -t babelify -t partialify -o ./dist/ng.js",
-    "build:node": "browserify --node -u electron ./src/node/index.js -t babelify -o ./index.js",
+    "start": "electron ./index.js",
+    "build:js": "browserify ./src/js/ng.js --no-bundle-external -u electron -t babelify -t partialify -o ./dist/ng.js",
+    "watch:js": "watchify ./src/js/ng.js --no-bundle-external -u electron -t babelify -t partialify -o ./dist/ng.js",
+    "build:node": "browserify --node --no-bundle-external -u electron ./src/node/index.js -t babelify -o ./index.js",
+    "build": "npm run build:js && npm run build:node",
     "prepackage": "npm run build:js && npm run build:node",
     "package": "node ./scripts/package.js"
   },
@@ -21,7 +23,7 @@
     "babelify": "^7.3.0",
     "browserify": "^11.2.0",
     "electron-packager": "^7.0.4",
-    "electron-prebuilt": "^1.2.3",
+    "electron-prebuilt": "^1.2.5",
     "partialify": "^3.1.6",
     "watchify": "^3.7.0"
   }

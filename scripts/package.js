@@ -13,7 +13,7 @@ packager({
   out: "./packaged",
   overwrite: true,
   prune: true,
-  version: "1.2.3",
+  version: pkg.devDependencies["electron-prebuilt"].replace("^", ""),
   "version-string": {
     CompanyName: "Modwatch",
     FileDescription: "A simple uploader for modwat.ch",
