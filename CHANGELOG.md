@@ -5,6 +5,7 @@
 **Minor**
 
 - Added `electron-debug`
+- conditional path to index.html
 
 **Patch**
 
@@ -13,6 +14,7 @@
 - general John Papa styleguide stuff
 - wrap toast calls in a service
 - toast templates in separate files
+-
 
 ### 0.2.1
 
