@@ -1,7 +1,9 @@
-import { app, ipcMain as ipc, dialog, BrowserWindow } from "electron";  // Module to control application life.
+import { app, ipcMain as ipc, dialog, BrowserWindow } from "electron";
+import debug from "electron-debug";
 import { join } from "path";
 import { cleanFile, cleanArray, readFiles } from "./utils";
 
+debug();
 let mainWindow = null;
 
 app.on("window-all-closed", () => {
@@ -14,8 +16,6 @@ app.on("ready", () => {
   mainWindow = new BrowserWindow({width: 500, height: 600});
 
   mainWindow.loadURL(`file://${join(process.cwd(), "index.html")}`);
-
-  mainWindow.openDevTools();
 
   mainWindow.on("closed", () => {
     mainWindow = null;

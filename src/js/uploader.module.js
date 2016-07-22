@@ -4,6 +4,7 @@ import "angular-aria";
 import "angular-material";
 
 import "./services/api/api.module";
+import "./services/toast/toast.module";
 import "./controllers/main/main.module";
 
 angular
@@ -11,5 +12,6 @@ angular
   "ngMaterial",
 
   "uploader.main",
-  "uploader.api"
+  "uploader.api",
+  "uploader.toast"
 ]);

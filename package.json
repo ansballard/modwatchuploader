@@ -1,13 +1,14 @@
 {
   "name": "modwatchuploader",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "main": "index.js",
   "dependencies": {
     "angular": "^1.5.7",
     "angular-animate": "^1.5.7",
     "angular-aria": "^1.5.7",
     "angular-material": "^0.10.0",
-    "denodeify": "^1.2.1"
+    "denodeify": "^1.2.1",
+    "electron-debug": "^1.0.1"
   },
   "scripts": {
     "start": "electron ./index.js",
@@ -15,15 +16,16 @@
     "watch:js": "watchify ./src/js/uploader.module.js --no-bundle-external -u electron -t babelify -t partialify -o ./dist/index.js",
     "build:node": "browserify --node --no-bundle-external -u electron ./src/node/index.js -t babelify -o ./index.js",
     "build": "npm run build:js && npm run build:node",
-    "prepackage": "npm run build:js && npm run build:node",
+    "prepackage": "npm run build",
     "package": "node ./scripts/package.js"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.3.0",
     "browserify": "^11.2.0",
-    "electron-packager": "^7.0.4",
-    "electron-prebuilt": "^1.2.5",
+    "devtron": "^1.2.1",
+    "electron-packager": "^7.3.0",
+    "electron-prebuilt": "^1.2.8",
     "partialify": "^3.1.6",
     "watchify": "^3.7.0"
   }

@@ -1,10 +1,10 @@
 import { ipcRenderer as ipc } from "electron";
 
-main.$inject = ["$scope", "$mdToast", "API"];
+main.$inject = ["$scope", "Toast", "API"];
 
 export default main;
 
-function main($scope, $mdToast, API) {
+function main($scope, Toast, API) {
 
   const vm = this;
 
@@ -25,19 +25,11 @@ function main($scope, $mdToast, API) {
   .then(res => {
     vm.scriptVersion.global = res;
     if(vm.scriptVersion.local !== res) { // dev
-      /*$mdToast.show({
-        templateUrl: "versiontoast.html",
-        hideDelay: 6000,
-        position: "bottom right"
-      });*/
+      /*Toast.version()*/
     }
   })
   .catch(err => {
-    $mdToast.show({
-      templateUrl: "serverdowntoast.html",
-      hideDelay: 6000,
-      position: "bottom right"
-    });
+    Toast.serverDown();
   });
   vm.userInfo = {
     username: window.localStorage.getItem("modwatch.username") || "",
@@ -78,8 +70,7 @@ function main($scope, $mdToast, API) {
     }
   }
 
-
-  var getUserInfo = function getUserInfo(username) {
+  function getUserInfo(username) {
     if(username !== "") {
       API.getUserInfo(username)
       .then(info => {
@@ -93,25 +84,25 @@ function main($scope, $mdToast, API) {
     }
   };
   getUserInfo(vm.userInfo.username);
-  vm.mo.getFiles = function mo_getFiles() {
+  vm.mo.getFiles = function() {
     ipc.send("mo.getFiles");
   };
-  vm.nmm.getPluginsFile = function nmm_getPluginsFile() {
+  vm.nmm.getPluginsFile = function() {
     ipc.send("nmm.getPluginsFile");
   };
-  vm.nmm.getIniFiles = function nmm_getIniFiles() {
+  vm.nmm.getIniFiles = function() {
     ipc.send("nmm.getIniFiles");
   };
-  ipc.on("mo.filepath", function(event, filepath) {
+  ipc.on("mo.filepath", (event, filepath) => {
     vm.mo.filepath = filepath || "";
   });
-  ipc.on("nmm.pluginsFile", function(event, filepath) {
+  ipc.on("nmm.pluginsFile", (event, filepath) => {
     vm.nmm.pluginsPath = filepath || "";
   });
-  ipc.on("nmm.iniFiles", function(event, filepath) {
+  ipc.on("nmm.iniFiles", (event, filepath) => {
     vm.nmm.iniPath = filepath || "";
   });
-  ipc.on("filesread", function(event, files) {
+  ipc.on("filesread", (event, files) => {
     files = JSON.parse(files);
     vm.userInfo.plugins = typeof files.plugins !== "undefined" ? files.plugins : vm.userInfo.plugins;
     vm.userInfo.modlist = typeof files.modlist !== "undefined" ? files.modlist : vm.userInfo.modlist;
@@ -135,7 +126,7 @@ function main($scope, $mdToast, API) {
     $scope.$digest();
   });
 
-  vm.saveUser = function saveUser(program) {
+  vm.saveUser = function(program) {
     if(vm.userInfo.username !== "" && vm.userInfo.password !== "") {
       window.localStorage.setItem("modwatch.username", vm.userInfo.username);
       window.localStorage.setItem("modwatch.password", vm.userInfo.password);
@@ -143,29 +134,21 @@ function main($scope, $mdToast, API) {
       window.localStorage.setItem("modwatch.nmm_pluginsPath", vm.nmm.pluginsPath || "");
       window.localStorage.setItem("modwatch.nmm_iniPath", vm.nmm.iniPath || "");
       window.localStorage.setItem("modwatch.program", program || "MO");
-      $mdToast.show({
-        templateUrl: "savedinfotoast.html",
-        hideDelay: 3000,
-        position: "bottom right"
-      });
+      Toast.savedInfo();
     }
   };
 
   vm.uploadMods = function() {
     API.uploadMods(vm.userInfo)
     .then(res => {
-      $mdToast.show({
-        templateUrl: "uploaddonetoast.html",
-        hideDelay: 6000,
-        position: "bottom right"
-      });
+      Toast.infoDone();
     })
     .catch(err => {
-      $mdToast.show({
-        templateUrl: err.status === 403 ? "badpasswordtoast.html" : "serverdowntoast.html",
-        hideDelay: 6000,
-        position: "bottom right"
-      });
+      if(err.status === 403) {
+        Toast.badPassword();
+      } else {
+        Toast.serverDown();
+      }
     });
   };
 }
