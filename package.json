@@ -15,7 +15,7 @@
     "start": "electron ./index.js",
     "build:js": "browserify ./src/js/uploader.module.js --no-bundle-external -u electron -t babelify -t partialify -o ./dist/index.js",
     "watch:js": "watchify ./src/js/uploader.module.js --no-bundle-external -u electron -t babelify -t partialify -o ./dist/index.js",
-    "build:node": "browserify --node --no-bundle-external -u electron ./src/node/index.js -t babelify -o ./index.js",
+    "build:node": "browserify --node -u electron ./src/node/index.js -t babelify -o ./index.js",
     "build": "npm run build:js && npm run build:node",
     "prepackage": "npm run build",
     "package": "node ./scripts/package.js"
