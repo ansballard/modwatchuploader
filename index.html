@@ -7,7 +7,7 @@
   <link type="text/css" href="deps/material-icons.css" rel="stylesheet">
 </head>
 
-<body ng-app="uploader" ng-controller="MainCtrl" style="overflow-y: hidden;">
+<body ng-app="uploader" ng-controller="MainController as vm" style="overflow-y: hidden;">
   <md-toolbar style="margin-bottom: 20px;">
     <h1 style="margin-left: 20px;">Modwat.ch Uploader</h1>
   </md-toolbar>
@@ -15,27 +15,27 @@
     <section layout="row">
       <md-input-container flex>
         <label>Username</label>
-        <input type="text" ng-model="userInfo.username" />
+        <input type="text" ng-model="vm.userInfo.username" />
       </md-input-container>
       <md-input-container flex>
         <label>Password</label>
-        <input type="password" ng-model="userInfo.password" />
+        <input type="password" ng-model="vm.userInfo.password" />
       </md-input-container>
     </section>
     <section layout="row">
       <md-input-container flex>
         <label>Tag</label>
-        <input type="text" ng-model="userInfo.tag" />
+        <input type="text" ng-model="vm.userInfo.tag" />
       </md-input-container>
       <md-input-container flex>
         <label>ENB</label>
-        <input type="text" ng-model="userInfo.enb" />
+        <input type="text" ng-model="vm.userInfo.enb" />
       </md-input-container>
     </section>
-    <md-tabs md-dynamic-height md-selected="currentTab">
+    <md-tabs md-dynamic-height md-selected="vm.currentTab">
       <md-tab label="Mod Organizer">
         <div layout="row">
-          <md-button class="md-fab md-raised md-primary" ng-click="mo.getFiles()">
+          <md-button class="md-fab md-raised md-primary" ng-click="vm.mo.getFiles()">
             <ng-md-icon>
               <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
                 <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
@@ -47,13 +47,13 @@
           </md-button>
           <md-input-container flex>
             <label>Mod Profile Directory</label>
-            <input type="text" ng-model="mo.filepath" />
+            <input type="text" ng-model="vm.mo.filepath" />
           </md-input-container>
         </div>
       </md-tab>
       <md-tab label="Nexus Mod Manager">
         <div layout="row">
-          <md-button class="md-fab md-raised md-primary" ng-click="nmm.getPluginsFile()">
+          <md-button class="md-fab md-raised md-primary" ng-click="vm.nmm.getPluginsFile()">
             <ng-md-icon>
               <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
                 <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
@@ -65,11 +65,11 @@
           </md-button>
           <md-input-container flex>
             <label>plugins.txt directory</label>
-            <input type="text" ng-model="nmm.pluginsPath" />
+            <input type="text" ng-model="vm.nmm.pluginsPath" />
           </md-input-container>
         </div>
         <div layout="row">
-          <md-button class="md-fab md-raised md-primary" ng-click="nmm.getIniFiles()">
+          <md-button class="md-fab md-raised md-primary" ng-click="vm.nmm.getIniFiles()">
             <svg style="fill: #fff" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" height="100%" width="75%">
               <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path>
             </svg>
@@ -79,19 +79,19 @@
           </md-button>
           <md-input-container flex>
             <label>ini file directory</label>
-            <input type="text" ng-model="nmm.iniPath" />
+            <input type="text" ng-model="vm.nmm.iniPath" />
           </md-input-container>
         </div>
       </md-tab>
     </md-tabs>
     <div layout="row" layout-align="center">
-      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password" ng-click="saveUser(currentTab)">
+      <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password" ng-click="vm.saveUser(vm.currentTab)">
         Save
         <md-tooltip>
           Remember your login info
         </md-tooltip>
       </md-button>
-      <md-button class="md-raised md-primary" ng-disabled="!userInfo.username || !userInfo.password || (!nmm.pluginsPath && !mo.filepath)" ng-click="uploadMods()">
+      <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password || (!vm.nmm.pluginsPath && !vm.mo.filepath)" ng-click="vm.uploadMods()">
         Upload
         <md-tooltip>
           Send to modwat.ch
@@ -100,11 +100,11 @@
     </div>
     <section layout="row" layout-align="center">
       <md-chips>
-        <md-chip ng-repeat="file in files">{{file.display}}</md-chip>
+        <md-chip ng-repeat="file in vm.files">{{file.display}}</md-chip>
       </md-chips>
     </section>
   </md-content>
-  <script type="text/javascript" src="dist/ng.js"></script>
+  <script type="text/javascript" src="dist/index.js"></script>
   <script type="text/ng-template" id="versiontoast.html">
     <md-toast>
       <span flex>You are not using the <a href="http://www.nexusmods.com/skyrim/mods/56640/?">latest stable version</a></span>
