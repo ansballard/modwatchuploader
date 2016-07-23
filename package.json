@@ -1,12 +1,12 @@
 {
   "name": "modwatchuploader",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "index.js",
   "dependencies": {
     "angular": "^1.5.7",
     "angular-animate": "^1.5.7",
     "angular-aria": "^1.5.7",
-    "angular-material": "^0.10.0",
+    "angular-material": "^1.0.9",
     "denodeify": "^1.2.1",
     "electron-debug": "^1.0.1"
   },

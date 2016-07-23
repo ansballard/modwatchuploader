@@ -1,10 +1,10 @@
 import { ipcRenderer as ipc } from "electron";
 
-main.$inject = ["$scope", "Toast", "API"];
+main.$inject = ["$scope", "$timeout", "Toast", "API"];
 
 export default main;
 
-function main($scope, Toast, API) {
+function main($scope, $timeout, Toast, API) {
 
   const vm = this;
 
@@ -20,17 +20,6 @@ function main($scope, Toast, API) {
     iniPath: undefined
   };
   vm.currentTab = 0;
-
-  API.getCurrentVersion()
-  .then(res => {
-    vm.scriptVersion.global = res;
-    if(vm.scriptVersion.local !== res) { // dev
-      /*Toast.version()*/
-    }
-  })
-  .catch(err => {
-    Toast.serverDown();
-  });
   vm.userInfo = {
     username: window.localStorage.getItem("modwatch.username") || "",
     password: window.localStorage.getItem("modwatch.password") || "",
@@ -42,6 +31,23 @@ function main($scope, Toast, API) {
     ini: [],
     prefsini: []
   };
+  vm.uploadMods = uploadMods;
+  vm.saveUser = saveUser;
+
+  Promise.all([
+    API.getCurrentVersion()
+    .catch(err => {
+      Toast.serverDown();
+    }),
+    getUserInfo(vm.userInfo.username),
+    new Promise(resolve => {
+      $timeout(resolve, 1500);
+    })
+  ])
+  .then(() => {
+    document.getElementById("loader-wrapper").remove();
+  });
+
   if(window.localStorage.getItem("modwatch.program") === "NMM") {
     vm.currentTab = 1;
   }
@@ -69,21 +75,6 @@ function main($scope, Toast, API) {
       }
     }
   }
-
-  function getUserInfo(username) {
-    if(username !== "") {
-      API.getUserInfo(username)
-      .then(info => {
-        vm.userInfo.enb = info.enb;
-        vm.userInfo.tag = info.tag;
-        vm.userInfo.game = info.game || "skyrim";
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    }
-  };
-  getUserInfo(vm.userInfo.username);
   vm.mo.getFiles = function() {
     ipc.send("mo.getFiles");
   };
@@ -110,7 +101,6 @@ function main($scope, Toast, API) {
     vm.userInfo.prefsini = typeof files.prefsini !== "undefined" ? files.prefsini : vm.userInfo.prefsini;
 
     vm.files = [];
-    console.log(vm.userInfo);
     if(vm.userInfo.plugins.length > 0) {
       vm.files.push({display: "plugins.txt", ref: "plugins"});
     }
@@ -126,7 +116,7 @@ function main($scope, Toast, API) {
     $scope.$digest();
   });
 
-  vm.saveUser = function(program) {
+  function saveUser(program) {
     if(vm.userInfo.username !== "" && vm.userInfo.password !== "") {
       window.localStorage.setItem("modwatch.username", vm.userInfo.username);
       window.localStorage.setItem("modwatch.password", vm.userInfo.password);
@@ -136,9 +126,8 @@ function main($scope, Toast, API) {
       window.localStorage.setItem("modwatch.program", program || "MO");
       Toast.savedInfo();
     }
-  };
-
-  vm.uploadMods = function() {
+  }
+  function uploadMods() {
     API.uploadMods(vm.userInfo)
     .then(res => {
       Toast.uploadDone();
@@ -150,5 +139,18 @@ function main($scope, Toast, API) {
         Toast.serverDown();
       }
     });
-  };
+  }
+  function getUserInfo(username) {
+    if(username !== "") {
+      API.getUserInfo(username)
+      .then(info => {
+        vm.userInfo.enb = info.enb;
+        vm.userInfo.tag = info.tag;
+        vm.userInfo.game = info.game || "skyrim";
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }
+  }
 }

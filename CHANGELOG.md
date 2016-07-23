@@ -1,5 +1,17 @@
 # Changelog
 
+### 0.3.1
+
+**Minor**
+
+- none
+
+**Patch**
+
+- hide render delay with loading screen
+- bump angular-material to 1.0.9
+- ng-jq and ng-strict-di, hopefully slight perf boost
+
 ### 0.3.0
 
 **Minor**
