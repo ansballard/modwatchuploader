@@ -4,8 +4,7 @@
 
 **Minor**
 
-- Added `electron-debug`
-- conditional path to index.html
+- Added `electron-debug`, `ctrl`+`shift`+`I` or `F12` to debug
 
 **Patch**
 
@@ -14,7 +13,7 @@
 - general John Papa styleguide stuff
 - wrap toast calls in a service
 - toast templates in separate files
--
+- index.html now loads from process.mainModule
 
 ### 0.2.1
 

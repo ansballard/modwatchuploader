@@ -9,7 +9,7 @@ import "./controllers/main/main.module";
 
 angular
 .module("uploader", [
-  "ngMaterial",
+  // "ngMaterial",
 
   "uploader.main",
   "uploader.api",

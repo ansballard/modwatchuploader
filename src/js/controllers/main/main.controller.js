@@ -141,7 +141,7 @@ function main($scope, Toast, API) {
   vm.uploadMods = function() {
     API.uploadMods(vm.userInfo)
     .then(res => {
-      Toast.infoDone();
+      Toast.uploadDone();
     })
     .catch(err => {
       if(err.status === 403) {

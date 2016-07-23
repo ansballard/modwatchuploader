@@ -1,10 +1,9 @@
 import { app, ipcMain as ipc, dialog, BrowserWindow } from "electron";
-import isDev from "electron-is-dev";
 import debug from "electron-debug";
-import { join } from "path";
+import { join, dirname } from "path";
 import { cleanFile, cleanArray, readFiles } from "./utils";
 
-debug();
+debug({enabled: true});
 let mainWindow = null;
 
 app.on("window-all-closed", () => {
@@ -16,11 +15,7 @@ app.on("window-all-closed", () => {
 app.on("ready", () => {
   mainWindow = new BrowserWindow({width: 500, height: 600});
 
-  try {
-    mainWindow.loadURL(`file://${join(process.cwd(), "index.html")}`);
-  } catch(e) {
-    mainWindow.loadURL(`file://${__dirname}/../../index.html`);
-  }
+  mainWindow.loadURL(`file:///${join(dirname(process.mainModule.filename), "index.html")}`);
 
   mainWindow.on("closed", () => {
     mainWindow = null;

@@ -1,5 +1,5 @@
 import service from "./toast.service";
 
 angular
-.module("uploader.toast", [])
+.module("uploader.toast", ["ngMaterial"])
 .factory("Toast", service);

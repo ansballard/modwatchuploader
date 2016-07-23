@@ -26,12 +26,12 @@ function Toast($mdToast) {
       defaultToast(versionT);
     }
   };
-}
 
-function defaultToast(template, hideDelay) {
-  $mdToast.show({
-    template,
-    hideDelay: hideDelay ? hideDelay * 1000 : 6000,
-    position: "bottom right"
-  });
+  function defaultToast(template, hideDelay) {
+    $mdToast.show({
+      template,
+      hideDelay: hideDelay ? hideDelay * 1000 : 6000,
+      position: "bottom right"
+    });
+  }
 }
