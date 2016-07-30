@@ -13,6 +13,7 @@
 - ng-jq and ng-strict-di, hopefully slight perf boost
 - show key combo for debug mode on first run
 - wrap localstorage in state service
+- set default NMM paths
 
 ### 0.3.0
 

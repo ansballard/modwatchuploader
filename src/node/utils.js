@@ -39,3 +39,6 @@ export function readFiles(fileDir, filenames) {
   )
   .then(rawFiles => rawFiles.map(cleanFile));
 }
+
+export const nmmPluginsDefault = join(process.env.APPDATA, "..", "local", "Skyrim");
+export const nmmIniDefault = join(process.env.USERPROFILE, "My Documents", "My Games", "skyrim");

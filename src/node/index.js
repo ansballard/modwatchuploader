@@ -1,7 +1,7 @@
 import { app, ipcMain as ipc, dialog, BrowserWindow } from "electron";
 import debug from "electron-debug";
 import { join, dirname } from "path";
-import { cleanFile, cleanArray, readFiles } from "./utils";
+import { cleanFile, cleanArray, readFiles, nmmPluginsDefault, nmmIniDefault } from "./utils";
 
 debug({enabled: true});
 let mainWindow = null;
@@ -52,8 +52,9 @@ app.on("ready", () => {
 
   function getPluginsNMM(filepath) {
     const fileDir = filepath || dialog.showOpenDialog({
+      defaultPath: nmmPluginsDefault,
       properties: ["openDirectory"],
-      title: "Find your plugins.txt folder"
+      title: "Select the directory your plugins.txt file is in"
     })[0];
     return readFiles(fileDir, [
       "plugins.txt"
@@ -70,8 +71,9 @@ app.on("ready", () => {
 
   function getIniNMM(filepath) {
     let fileDir = filepath || dialog.showOpenDialog({
+      defaultPath: nmmIniDefault,
       properties: ["openDirectory"],
-      title: "Find your .ini files"
+      title: "Select the directory your .ini files are in"
     })[0];
     return readFiles(fileDir, [
       "skyrim.ini",
