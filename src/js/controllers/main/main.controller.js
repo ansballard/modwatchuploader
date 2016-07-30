@@ -1,10 +1,10 @@
 import { ipcRenderer as ipc } from "electron";
 
-main.$inject = ["$scope", "$timeout", "Toast", "API"];
+main.$inject = ["$scope", "$timeout", "Toast", "API", "State"];
 
 export default main;
 
-function main($scope, $timeout, Toast, API) {
+function main($scope, $timeout, Toast, API, State) {
 
   const vm = this;
 
@@ -46,6 +46,13 @@ function main($scope, $timeout, Toast, API) {
   ])
   .then(() => {
     document.getElementById("loader-wrapper").remove();
+    return State.isFirstTime();
+  })
+  .then(isFirstTime => {
+    if(isFirstTime) {
+      Toast.debughelper();
+      State.disableFirstTime();
+    }
   });
 
   if(window.localStorage.getItem("modwatch.program") === "NMM") {

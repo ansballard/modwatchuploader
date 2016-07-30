@@ -11,6 +11,8 @@
 - hide render delay with loading screen
 - bump angular-material to 1.0.9
 - ng-jq and ng-strict-di, hopefully slight perf boost
+- show key combo for debug mode on first run
+- wrap localstorage in state service
 
 ### 0.3.0
 
