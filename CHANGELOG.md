@@ -14,6 +14,8 @@
 - show key combo for debug mode on first run
 - wrap localstorage in state service
 - set default NMM paths
+- render on files read
+- correctly set currentTab (fixes NMM)
 
 ### 0.3.0
 

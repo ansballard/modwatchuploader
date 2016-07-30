@@ -93,12 +93,15 @@ function main($scope, $timeout, Toast, API, State) {
   };
   ipc.on("mo.filepath", (event, filepath) => {
     vm.mo.filepath = filepath || "";
+    $scope.$digest();
   });
   ipc.on("nmm.pluginsFile", (event, filepath) => {
     vm.nmm.pluginsPath = filepath || "";
+    $scope.$digest();
   });
   ipc.on("nmm.iniFiles", (event, filepath) => {
     vm.nmm.iniPath = filepath || "";
+    $scope.$digest();
   });
   ipc.on("filesread", (event, files) => {
     files = JSON.parse(files);
@@ -124,6 +127,7 @@ function main($scope, $timeout, Toast, API, State) {
   });
 
   function saveUser(program) {
+    console.log(program);
     if(vm.userInfo.username !== "" && vm.userInfo.password !== "") {
       window.localStorage.setItem("modwatch.username", vm.userInfo.username);
       window.localStorage.setItem("modwatch.password", vm.userInfo.password);
@@ -135,6 +139,10 @@ function main($scope, $timeout, Toast, API, State) {
     }
   }
   function uploadMods() {
+    if(vm.currentTab === 1) {
+      vm.userInfo.modlist = undefined;
+    }
+    console.log(vm.userInfo);
     API.uploadMods(vm.userInfo)
     .then(res => {
       Toast.uploadDone();

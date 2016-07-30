@@ -10,6 +10,7 @@ import "./controllers/main/main.module";
 
 angular
 .module("uploader", [
+  "ngMaterial",
   "uploader.main",
   "uploader.api",
   "uploader.state",

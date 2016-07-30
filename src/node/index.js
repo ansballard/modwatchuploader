@@ -22,10 +22,10 @@ app.on("ready", () => {
   });
 
   function getFilesMO(filepath) {
-    const fileDir = filepath || dialog.showOpenDialog({
-      properties: ["openDirectory"],
-      title: "Find your mod profile folder"
-    })[0];
+    const fileDir = filepath || dirname(dialog.showOpenDialog({
+      properties: ["openFile"],
+      title: "Select your plugins.txt file in your MO profile directory"
+    })[0]);
 
     return readFiles(fileDir, [
       "plugins.txt",
@@ -51,11 +51,11 @@ app.on("ready", () => {
   }
 
   function getPluginsNMM(filepath) {
-    const fileDir = filepath || dialog.showOpenDialog({
+    const fileDir = filepath || dirname(dialog.showOpenDialog({
       defaultPath: nmmPluginsDefault,
-      properties: ["openDirectory"],
-      title: "Select the directory your plugins.txt file is in"
-    })[0];
+      properties: ["openFile"],
+      title: "Select your plugins.txt file"
+    })[0]);
     return readFiles(fileDir, [
       "plugins.txt"
     ])
@@ -70,11 +70,11 @@ app.on("ready", () => {
   }
 
   function getIniNMM(filepath) {
-    let fileDir = filepath || dialog.showOpenDialog({
+    let fileDir = filepath || dirname(dialog.showOpenDialog({
       defaultPath: nmmIniDefault,
-      properties: ["openDirectory"],
-      title: "Select the directory your .ini files are in"
-    })[0];
+      properties: ["openFile"],
+      title: "Select one of your ini files"
+    })[0]);
     return readFiles(fileDir, [
       "skyrim.ini",
       "skyrimprefs.ini"
