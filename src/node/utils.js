@@ -40,5 +40,5 @@ export function readFiles(fileDir, filenames) {
   .then(rawFiles => rawFiles.map(cleanFile));
 }
 
-export const nmmPluginsDefault = join(process.env.APPDATA, "..", "local", "Skyrim");
-export const nmmIniDefault = join(process.env.USERPROFILE, "My Documents", "My Games", "skyrim");
+export const nmmPluginsDefault = process.env.APPDATA ? join(process.env.APPDATA, "..", "local", "Skyrim") : undefined;
+export const nmmIniDefault = process.env.USERPROFILE ? join(process.env.USERPROFILE, "My Documents", "My Games", "skyrim") : undefined;

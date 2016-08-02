@@ -53,6 +53,11 @@ function main($scope, $timeout, Toast, API, State) {
       Toast.debughelper();
       State.disableFirstTime();
     }
+  })
+  .catch(e => {
+    document.getElementById("loader-wrapper").innerHTML = `
+      <h3>Hmmmmmm</h3><p>Something went wrong</p>
+    `;
   });
 
   if(window.localStorage.getItem("modwatch.program") === "NMM") {
@@ -142,7 +147,6 @@ function main($scope, $timeout, Toast, API, State) {
     if(vm.currentTab === 1) {
       vm.userInfo.modlist = undefined;
     }
-    console.log(vm.userInfo);
     API.uploadMods(vm.userInfo)
     .then(res => {
       Toast.uploadDone();
@@ -159,6 +163,7 @@ function main($scope, $timeout, Toast, API, State) {
     if(username !== "") {
       API.getUserInfo(username)
       .then(info => {
+        console.log(info);
         vm.userInfo.enb = info.enb;
         vm.userInfo.tag = info.tag;
         vm.userInfo.game = info.game || "skyrim";
