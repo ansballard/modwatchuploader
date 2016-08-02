@@ -40,8 +40,10 @@ app.on("ready", () => {
       prefsini: rawFiles[3]
     }))
     .then(files => {
-      mainWindow.webContents.send("filesread", JSON.stringify(files));
-      mainWindow.webContents.send("mo.filepath", fileDir);
+      mainWindow.webContents.send("mo.files", JSON.stringify({
+        files,
+        path: fileDir
+      }));
       return files;
     })
     .catch(e => {
@@ -63,8 +65,10 @@ app.on("ready", () => {
       plugins: rawFiles[0]
     }))
     .then(files => {
-      mainWindow.webContents.send("filesread", JSON.stringify(files));
-      mainWindow.webContents.send("nmm.pluginsFile", fileDir);
+      mainWindow.webContents.send("nmm.pluginsFile", JSON.stringify({
+        files,
+        path: fileDir
+      }));
       return files;
     });
   }
@@ -84,28 +88,21 @@ app.on("ready", () => {
       prefsini: rawFiles[1]
     }))
     .then(files => {
-      mainWindow.webContents.send("filesread", JSON.stringify(files));
-      mainWindow.webContents.send("nmm.iniFiles", fileDir);
+      mainWindow.webContents.send("nmm.iniFiles", JSON.stringify({
+        files,
+        path: fileDir
+      }));
       return files;
     });
   }
 
-  ipc.on("mo.getFiles", event => {
-    getFilesMO();
+  ipc.on("mo.getFiles", (event, filename) => {
+    getFilesMO(filename || undefined);
   });
-  ipc.on("nmm.getPluginsFile", event => {
-    getPluginsNMM();
+  ipc.on("nmm.getPluginsFile", (event, filename) => {
+    getPluginsNMM(filename || undefined);
   });
-  ipc.on("nmm.getIniFiles", event => {
-    getIniNMM();
-  });
-  ipc.on("mo.getFilesNoDialog", (event, filename) => {
-    getFilesMO(filename);
-  });
-  ipc.on("nmm.getPluginsFileNoDialog", (event, filename) => {
-    getPluginsNMM(filename);
-  });
-  ipc.on("nmm.getIniFilesNoDialog", (event, filename) => {
-    getIniNMM(filename);
+  ipc.on("nmm.getIniFiles", (event, filename) => {
+    getIniNMM(filename || undefined);
   });
 });

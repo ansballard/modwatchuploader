@@ -1,11 +1,10 @@
 import { ipcRenderer as ipc } from "electron";
 
-main.$inject = ["$scope", "$timeout", "Toast", "API", "State"];
+main.$inject = ["$scope", "$timeout", "$q", "Toast", "API", "State"];
 
 export default main;
 
-function main($scope, $timeout, Toast, API, State) {
-
+function main($scope, $timeout, $q, Toast, API, State) {
   const vm = this;
 
   vm.scriptVersion = {
@@ -21,11 +20,6 @@ function main($scope, $timeout, Toast, API, State) {
   };
   vm.currentTab = 0;
   vm.userInfo = {
-    username: window.localStorage.getItem("modwatch.username") || "",
-    password: window.localStorage.getItem("modwatch.password") || "",
-    enb: "",
-    tag: "",
-    game: "skyrim",
     plugins: [],
     modlist: [],
     ini: [],
@@ -34,13 +28,21 @@ function main($scope, $timeout, Toast, API, State) {
   vm.uploadMods = uploadMods;
   vm.saveUser = saveUser;
 
-  Promise.all([
-    API.getCurrentVersion()
-    .catch(err => {
-      Toast.serverDown();
+  $q.all([
+    State.getCreds()
+    .then(creds => {
+      vm.userInfo.username = creds.username;
+      vm.userInfo.password = creds.password;
+      return creds.username;
+    })
+    .then(API.getUserInfo)
+    .then(info => {
+      vm.userInfo.enb = info.enb || undefined;
+      vm.userInfo.tag = info.tag || undefined;
+      vm.userInfo.game = info.game || undefined;
+      return info;
     }),
-    getUserInfo(vm.userInfo.username),
-    new Promise(resolve => {
+    $q(resolve => {
       $timeout(resolve, 1500);
     })
   ])
@@ -55,84 +57,79 @@ function main($scope, $timeout, Toast, API, State) {
     }
   })
   .catch(e => {
+    console.log("Initialization Error:", e);
     document.getElementById("loader-wrapper").innerHTML = `
       <h3>Hmmmmmm</h3><p>Something went wrong</p>
     `;
   });
 
-  if(window.localStorage.getItem("modwatch.program") === "NMM") {
-    vm.currentTab = 1;
-  }
-  if(vm.currentTab === 0) {
-    if(window.localStorage.getItem("modwatch.mo_filepath")) {
-      vm.mo.filepath = window.localStorage.getItem("modwatch.mo_filepath") || "";
-      vm.files = [];
-      if(vm.mo.filepath !== "" && vm.mo.filepath !== null) {
-        ipc.send("mo.getFilesNoDialog", vm.mo.filepath);
+  State.getProgram()
+  .then(program => {
+    vm.currentTab = program === "MO" ? 0 : 1;
+    return vm.currentTab;
+  })
+  .then(() => $q.all([
+    State.getMOPath() // MO Path
+    .then(mo => {
+      if(mo) {
+        vm.mo.filepath = mo;
       }
-    }
-  } else {
-    if(window.localStorage.getItem("modwatch.nmm_pluginsPath")) {
-      vm.nmm.pluginsPath = window.localStorage.getItem("modwatch.nmm_pluginsPath") || "";
-      vm.files = [];
-      if(vm.mo.filepath !== "" && vm.mo.filepath !== null) {
-        ipc.send("nmm.getPluginsFileNoDialog", vm.nmm.pluginsPath);
+      return mo;
+    }),
+    State.getNMMPaths() // NMM Paths
+    .then(nmm => {
+      if(nmm.ini) {
+        vm.nmm.iniPath = nmm.ini;
       }
-    }
-    if(window.localStorage.getItem("modwatch.nmm_iniPath")) {
-      vm.nmm.iniPath = window.localStorage.getItem("modwatch.nmm_iniPath") || "";
-      vm.files = [];
-      if(vm.nmm.iniPath !== "" && vm.mo.filepath !== null) {
-        ipc.send("nmm.getIniFilesNoDialog", vm.nmm.iniPath);
+      if(nmm.plugins) {
+        vm.nmm.pluginsPath = nmm.plugins;
       }
+      return nmm;
+    })
+  ]))
+  .then(paths => {
+    if(vm.currentTab === 0 && paths[0]) {
+      vm.mo.getFiles(paths[0]);
+    } else if(vm.currentTab === 1 && paths[1].ini && paths[1].plugins) {
+      $q.all([
+        State.getNMMPluginsFile(paths[1].plugins || undefined),
+        State.getNMMIniFiles(paths[1].ini || undefined)
+      ])
+      .then(nmm => ({
+        files: angular.extend({}, nmm[0].files, nmm[1].files)
+      }))
+      .then(nmm => {
+        vm.userInfo = angular.extend({}, vm.userInfo, nmm.files, {modlist: undefined});
+        vm.files = filesRead(vm.userInfo);
+      })
     }
-  }
-  vm.mo.getFiles = function() {
-    ipc.send("mo.getFiles");
+  })
+  vm.mo.getFiles = function(p) {
+    return State.getMOFiles(p)
+    .then(mo => {
+      vm.mo.filepath = mo.path;
+      vm.userInfo = angular.extend({}, vm.userInfo, mo.files);
+      vm.files = filesRead(vm.userInfo);
+    });
   };
   vm.nmm.getPluginsFile = function() {
-    ipc.send("nmm.getPluginsFile");
+    return State.getNMMPluginsFile()
+    .then(nmm => {
+      vm.nmm.pluginsPath = nmm.path;
+      vm.userInfo = angular.extend({}, vm.userInfo, nmm.files, {modlist: undefined});
+      vm.files = filesRead(vm.userInfo);
+    })
   };
   vm.nmm.getIniFiles = function() {
-    ipc.send("nmm.getIniFiles");
+    return State.getNMMIniFiles()
+    .then(nmm => {
+      vm.nmm.iniPath = nmm.path;
+      vm.userInfo = angular.extend({}, vm.userInfo, nmm.files, {modlist: undefined});
+      vm.files = filesRead(vm.userInfo);
+    })
   };
-  ipc.on("mo.filepath", (event, filepath) => {
-    vm.mo.filepath = filepath || "";
-    $scope.$digest();
-  });
-  ipc.on("nmm.pluginsFile", (event, filepath) => {
-    vm.nmm.pluginsPath = filepath || "";
-    $scope.$digest();
-  });
-  ipc.on("nmm.iniFiles", (event, filepath) => {
-    vm.nmm.iniPath = filepath || "";
-    $scope.$digest();
-  });
-  ipc.on("filesread", (event, files) => {
-    files = JSON.parse(files);
-    vm.userInfo.plugins = typeof files.plugins !== "undefined" ? files.plugins : vm.userInfo.plugins;
-    vm.userInfo.modlist = typeof files.modlist !== "undefined" ? files.modlist : vm.userInfo.modlist;
-    vm.userInfo.ini = typeof files.ini !== "undefined" ? files.ini : vm.userInfo.ini;
-    vm.userInfo.prefsini = typeof files.prefsini !== "undefined" ? files.prefsini : vm.userInfo.prefsini;
-
-    vm.files = [];
-    if(vm.userInfo.plugins.length > 0) {
-      vm.files.push({display: "plugins.txt", ref: "plugins"});
-    }
-    if(vm.userInfo.modlist.length > 0) {
-      vm.files.push({display: "modlist.txt", ref: "modlist"});
-    }
-    if(vm.userInfo.ini.length > 0) {
-      vm.files.push({display: vm.userInfo.game + ".ini", ref: "ini"});
-    }
-    if(vm.userInfo.prefsini.length > 0) {
-      vm.files.push({display: vm.userInfo.game + "prefs.ini", ref: "prefsini"});
-    }
-    $scope.$digest();
-  });
 
   function saveUser(program) {
-    console.log(program);
     if(vm.userInfo.username !== "" && vm.userInfo.password !== "") {
       window.localStorage.setItem("modwatch.username", vm.userInfo.username);
       window.localStorage.setItem("modwatch.password", vm.userInfo.password);
@@ -144,9 +141,6 @@ function main($scope, $timeout, Toast, API, State) {
     }
   }
   function uploadMods() {
-    if(vm.currentTab === 1) {
-      vm.userInfo.modlist = undefined;
-    }
     API.uploadMods(vm.userInfo)
     .then(res => {
       Toast.uploadDone();
@@ -159,18 +153,20 @@ function main($scope, $timeout, Toast, API, State) {
       }
     });
   }
-  function getUserInfo(username) {
-    if(username !== "") {
-      API.getUserInfo(username)
-      .then(info => {
-        console.log(info);
-        vm.userInfo.enb = info.enb;
-        vm.userInfo.tag = info.tag;
-        vm.userInfo.game = info.game || "skyrim";
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  function filesRead(info = {}) {
+    const files = [];
+    if(info.plugins && info.plugins.length > 0) {
+      files.push({display: "plugins.txt", ref: "plugins"});
     }
+    if(info.modlist && info.modlist.length > 0) {
+      files.push({display: "modlist.txt", ref: "modlist"});
+    }
+    if(info.ini && info.ini.length > 0) {
+      files.push({display: info.game + ".ini", ref: "ini"});
+    }
+    if(info.prefsini && info.prefsini.length > 0) {
+      files.push({display: info.game + "prefs.ini", ref: "prefsini"});
+    }
+    return files;
   }
 }

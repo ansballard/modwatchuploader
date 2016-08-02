@@ -15,7 +15,6 @@ export function cleanFile(file) {
     .replace(/"/g, "\"")
   ) : [];
 }
-
 export function cleanArray(arr) {
   if(typeof arr !== "undefined") {
     for(let i = 0; i < arr.length; i++) {
@@ -26,7 +25,6 @@ export function cleanArray(arr) {
     }
   }
 }
-
 export function readFiles(fileDir, filenames) {
   return Promise.all(
     filenames.map(filename =>
