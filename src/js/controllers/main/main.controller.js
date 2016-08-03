@@ -25,12 +25,18 @@ function main($scope, $timeout, $q, Toast, API, State) {
     ini: [],
     prefsini: []
   };
+  vm.switchTabs = switchTabs;
   vm.uploadMods = uploadMods;
   vm.saveUser = saveUser;
 
   $q.all([
     State.getCreds()
     .then(creds => {
+      if(!creds.username || !creds.password) {
+        throw {
+          message: "No Local Profile Found"
+        };
+      }
       vm.userInfo.username = creds.username;
       vm.userInfo.password = creds.password;
       return creds.username;
@@ -41,6 +47,9 @@ function main($scope, $timeout, $q, Toast, API, State) {
       vm.userInfo.tag = info.tag || undefined;
       vm.userInfo.game = info.game || undefined;
       return info;
+    })
+    .catch(e => {
+      return;
     }),
     $q(resolve => {
       $timeout(resolve, 1500);
@@ -96,10 +105,10 @@ function main($scope, $timeout, $q, Toast, API, State) {
         State.getNMMIniFiles(paths[1].ini || undefined)
       ])
       .then(nmm => ({
-        files: angular.extend({}, nmm[0].files, nmm[1].files)
+        files: angular.extend({game: "skyrim"}, nmm[0].files, nmm[1].files)
       }))
       .then(nmm => {
-        vm.userInfo = angular.extend({}, vm.userInfo, nmm.files, {modlist: undefined});
+        vm.userInfo = angular.extend({game: "skyrim"}, vm.userInfo, nmm.files, {modlist: undefined});
         vm.files = filesRead(vm.userInfo);
       })
     }
@@ -108,8 +117,9 @@ function main($scope, $timeout, $q, Toast, API, State) {
     return State.getMOFiles(p)
     .then(mo => {
       vm.mo.filepath = mo.path;
-      vm.userInfo = angular.extend({}, vm.userInfo, mo.files);
+      vm.userInfo = angular.extend({game: "skyrim"}, vm.userInfo, mo.files);
       vm.files = filesRead(vm.userInfo);
+      return mo;
     });
   };
   vm.nmm.getPluginsFile = function() {
@@ -129,6 +139,14 @@ function main($scope, $timeout, $q, Toast, API, State) {
     })
   };
 
+  // switchTabs(vm.currentTab);
+  $scope.$watch("vm.currentTab", (newVal, oldVal) => {
+    $timeout(() => {
+      switchTabs(newVal);
+    });
+
+  });
+
   function saveUser(program) {
     if(vm.userInfo.username !== "" && vm.userInfo.password !== "") {
       window.localStorage.setItem("modwatch.username", vm.userInfo.username);
@@ -138,6 +156,43 @@ function main($scope, $timeout, $q, Toast, API, State) {
       window.localStorage.setItem("modwatch.nmm_iniPath", vm.nmm.iniPath || "");
       window.localStorage.setItem("modwatch.program", program || "MO");
       Toast.savedInfo();
+    }
+  }
+  function switchTabs(tab = 0) {
+    if(tab === 0) {
+      return State.getMOPath() // MO Path
+      .then(p => {
+        if(p) {
+          return vm.mo.getFiles(p);
+        }
+      });
+    } else {
+      return State.getNMMPaths() // NMM Paths
+      .then(nmm => {
+        if(nmm.ini) {
+          vm.nmm.iniPath = nmm.ini;
+        }
+        if(nmm.plugins) {
+          vm.nmm.pluginsPath = nmm.plugins;
+        }
+        return nmm;
+      })
+      .then(nmm => {
+        if(nmm.ini && nmm.plugins) {
+          return $q.all([
+            State.getNMMPluginsFile(nmm.plugins || undefined),
+            State.getNMMIniFiles(nmm.ini || undefined)
+          ])
+          .then(nmm => ({
+            files: angular.extend({}, nmm[0].files, nmm[1].files)
+          }))
+          .then(nmm => {
+            vm.userInfo = angular.extend({game: "skyrim"}, vm.userInfo, nmm.files, {modlist: undefined});
+            vm.files = filesRead(vm.userInfo);
+            return nmm;
+          })
+        }
+      });
     }
   }
   function uploadMods() {
