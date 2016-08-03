@@ -34,7 +34,7 @@ function Toast($mdToast) {
   function defaultToast(template, opts = {}) {
     $mdToast.show({
       template,
-      hideDelay: typeof opts.hideDelay !== "undefined" ? opts.hideDelay * 1000 : 6000,
+      hideDelay: typeof opts.hideDelay !== "undefined" ? opts.hideDelay * 1000 : 4000,
       position: "bottom right"
     });
   }

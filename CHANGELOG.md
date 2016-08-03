@@ -1,5 +1,16 @@
 # Changelog
 
+### 0.3.2
+
+**Minor**
+
+- none
+
+**Patch**
+
+- fix NMM currentTab issues
+- read files on load/switch tabs
+
 ### 0.3.1
 
 **Minor**
