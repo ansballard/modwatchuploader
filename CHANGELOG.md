@@ -12,6 +12,7 @@
 - add tooltips back in
 - switch to google's icons
 - save user on upload
+- get profile on password blur
 
 ### 0.3.2
 

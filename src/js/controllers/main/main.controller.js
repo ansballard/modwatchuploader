@@ -25,6 +25,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
     ini: [],
     prefsini: []
   };
+  vm.getUserInfo = getUserInfo;
   vm.switchTabs = switchTabs;
   vm.uploadMods = uploadMods;
   vm.saveProfile = saveProfile;
@@ -41,13 +42,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
       vm.userInfo.password = creds.password;
       return creds.username;
     })
-    .then(API.getUserInfo)
-    .then(info => {
-      vm.userInfo.enb = info.enb || undefined;
-      vm.userInfo.tag = info.tag || undefined;
-      vm.userInfo.game = info.game || undefined;
-      return info;
-    })
+    .then(getUserInfo)
     .catch(e => {
       return;
     }),
@@ -147,6 +142,15 @@ function main($scope, $timeout, $q, Toast, API, State) {
 
   });
 
+  function getUserInfo(username) {
+    return API.getUserInfo(username)
+    .then(info => {
+      vm.userInfo.enb = info.enb || undefined;
+      vm.userInfo.tag = info.tag || undefined;
+      vm.userInfo.game = info.game || undefined;
+      return info;
+    });
+  }
   function saveProfile(program, skipToast = false) {
     if(vm.userInfo.username !== "" && vm.userInfo.password !== "") {
       State.saveProfile(angular.extend({

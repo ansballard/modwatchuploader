@@ -90,7 +90,7 @@
         </md-input-container>
         <md-input-container flex="50">
           <label>Password</label>
-          <input type="password" ng-model="vm.userInfo.password" />
+          <input type="password" ng-model="vm.userInfo.password" ng-blur="vm.getUserInfo(vm.userInfo.username)"/>
         </md-input-container>
       </section>
       <section layout="row">
