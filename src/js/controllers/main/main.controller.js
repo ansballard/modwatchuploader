@@ -27,7 +27,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
   };
   vm.switchTabs = switchTabs;
   vm.uploadMods = uploadMods;
-  vm.saveUser = saveUser;
+  vm.saveProfile = saveProfile;
 
   $q.all([
     State.getCreds()
@@ -147,14 +147,13 @@ function main($scope, $timeout, $q, Toast, API, State) {
 
   });
 
-  function saveUser(program, skipToast = false) {
+  function saveProfile(program, skipToast = false) {
     if(vm.userInfo.username !== "" && vm.userInfo.password !== "") {
-      window.localStorage.setItem("modwatch.username", vm.userInfo.username);
-      window.localStorage.setItem("modwatch.password", vm.userInfo.password);
-      window.localStorage.setItem("modwatch.mo_filepath", vm.mo.filepath || "");
-      window.localStorage.setItem("modwatch.nmm_pluginsPath", vm.nmm.pluginsPath || "");
-      window.localStorage.setItem("modwatch.nmm_iniPath", vm.nmm.iniPath || "");
-      window.localStorage.setItem("modwatch.program", program || "MO");
+      State.saveProfile(angular.extend({
+        program: program === 1 ? "NMM" : "MO",
+        mo: vm.mo,
+        nmm: vm.nmm
+      }, vm.userInfo));
       if(!skipToast) {
          Toast.savedInfo();
        }
@@ -198,7 +197,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
     }
   }
   function uploadMods() {
-    saveUser(vm.currentTab === 1 ? "NMM" : "MO", "skipToast");
+    saveProfile(vm.currentTab, "skipToast");
     API.uploadMods(vm.userInfo)
     .then(res => {
       Toast.uploadDone();

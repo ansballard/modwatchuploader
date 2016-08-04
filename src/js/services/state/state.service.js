@@ -79,6 +79,14 @@ function state($q) {
         d.resolve(files);
       });
       return d.promise;
+    },
+    saveProfile(profile) {
+      localStorage.setItem(`${prefix}username`, profile.username);
+      localStorage.setItem(`${prefix}password`, profile.password);
+      localStorage.setItem(`${prefix}mo_filepath`, profile.mo.filepath);
+      localStorage.setItem(`${prefix}nmm_pluginsPath`, profile.nmm.pluginsPath);
+      localStorage.setItem(`${prefix}nmm_iniPath`, profile.nmm.iniPath);
+      localStorage.setItem(`${prefix}program`, profile.program);
     }
   };
 }

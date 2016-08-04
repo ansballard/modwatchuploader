@@ -152,7 +152,7 @@
         </md-tab>
       </md-tabs>
       <div layout="row" layout-align="center">
-        <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password" ng-click="vm.saveUser(vm.currentTab === 0 ? 'MO' : 'NMM')">
+        <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password" ng-click="vm.saveProfile(vm.currentTab)">
           Save Profile
         </md-button>
         <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password || (!vm.nmm.pluginsPath && !vm.mo.filepath)" ng-click="vm.uploadMods()">
