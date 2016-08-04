@@ -147,7 +147,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
 
   });
 
-  function saveUser(program) {
+  function saveUser(program, skipToast = false) {
     if(vm.userInfo.username !== "" && vm.userInfo.password !== "") {
       window.localStorage.setItem("modwatch.username", vm.userInfo.username);
       window.localStorage.setItem("modwatch.password", vm.userInfo.password);
@@ -155,7 +155,9 @@ function main($scope, $timeout, $q, Toast, API, State) {
       window.localStorage.setItem("modwatch.nmm_pluginsPath", vm.nmm.pluginsPath || "");
       window.localStorage.setItem("modwatch.nmm_iniPath", vm.nmm.iniPath || "");
       window.localStorage.setItem("modwatch.program", program || "MO");
-      Toast.savedInfo();
+      if(!skipToast) {
+         Toast.savedInfo();
+       }
     }
   }
   function switchTabs(tab = 0) {
@@ -196,6 +198,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
     }
   }
   function uploadMods() {
+    saveUser(vm.currentTab === 1 ? "NMM" : "MO", "skipToast");
     API.uploadMods(vm.userInfo)
     .then(res => {
       Toast.uploadDone();

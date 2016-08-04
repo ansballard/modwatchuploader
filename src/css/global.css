@@ -1,0 +1,12 @@
+@import "./lib/angular-material.min.css";
+@import "./header.css";
+@import "./content.css";
+@import "./footer.css";
+
+md-content {
+  margin: 0 50px;
+  overflow-x: hidden;
+}
+body {
+  overflow-y: hidden;
+}

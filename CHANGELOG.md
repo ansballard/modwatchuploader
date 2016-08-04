@@ -1,5 +1,18 @@
 # Changelog
 
+### 0.3.3
+
+**Minor**
+
+- none
+
+**Patch**
+
+- migrate css to external postcss
+- add tooltips back in
+- switch to google's icons
+- save user on upload
+
 ### 0.3.2
 
 **Minor**

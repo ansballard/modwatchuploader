@@ -1,0 +1,8 @@
+md-toolbar {
+  margin-bottom: 20px;
+}
+md-toolbar h1 {
+  margin-left: 40px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}

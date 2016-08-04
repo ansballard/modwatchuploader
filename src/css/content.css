@@ -1,0 +1,12 @@
+md-input-container, md-tabs {
+  margin-bottom: 0 !important;
+}
+section, md-tabs {
+  width: 100%;
+}
+.md-button > md-icon,
+.md-button > md-icon > i {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+}
