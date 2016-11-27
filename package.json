@@ -1,5 +1,8 @@
 {
   "name": "modwatchuploader",
+  "description": "A desktop app to upload load orders and config files to Modwatch",
+  "author": "Aaron Ballard <ans.ballard@gmail.com",
+  "homepage": "https://nexusmods.com/skyrim/mods/56640",
   "version": "0.3.2",
   "main": "index.js",
   "dependencies": {
