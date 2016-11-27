@@ -56,9 +56,12 @@ function state($q) {
         plugins: res[1]
       }));
     },
-    getNMMIniFiles(newpath) {
+    getNMMIniFiles({filepath, game}) {
       const d = $q.defer();
-      ipc.send("nmm.getIniFiles", newpath);
+      ipc.send("nmm.getIniFiles", {
+        filepath,
+        game
+      });
       ipc.once("nmm.iniFiles", (event, files) => {
         files = JSON.parse(files);
         if(files.path) {
@@ -68,9 +71,13 @@ function state($q) {
       });
       return d.promise;
     },
-    getNMMPluginsFile(newpath) {
+    getNMMPluginsFile({filepath, game}) {
       const d = $q.defer();
-      ipc.send("nmm.getPluginsFile", newpath);
+      console.log(filepath, game);
+      ipc.send("nmm.getPluginsFile", {
+        filepath,
+        game
+      });
       ipc.once("nmm.pluginsFile", (event, files) => {
         files = JSON.parse(files);
         if(files.path) {
@@ -87,6 +94,7 @@ function state($q) {
       localStorage.setItem(`${prefix}nmm_pluginsPath`, profile.nmm.pluginsPath);
       localStorage.setItem(`${prefix}nmm_iniPath`, profile.nmm.iniPath);
       localStorage.setItem(`${prefix}program`, profile.program);
+      localStorage.setItem(`${prefix}game`, profile.game);
     }
   };
 }

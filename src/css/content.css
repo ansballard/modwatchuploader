@@ -10,3 +10,6 @@ section, md-tabs {
   width: 30px;
   height: 30px;
 }
+md-select-menu > ._md {
+  margin: 0;
+}

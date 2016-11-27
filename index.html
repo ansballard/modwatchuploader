@@ -103,6 +103,16 @@
           <input type="text" ng-model="vm.userInfo.enb" />
         </md-input-container>
       </section>
+      <section layout="row">
+        <md-input-container flex="100">
+          <label>Game {{vm.userInfo.game}}</label>
+          <md-select ng-model="vm.userInfo.game" aria-label="Select Game">
+            <md-option ng-repeat="game in vm.games" value="{{game.value}}">
+              {{::game.display}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </section>
       <md-tabs md-dynamic-height md-selected="vm.currentTab">
         <md-tab label="Mod Organizer">
           <div layout="row">
@@ -161,7 +171,7 @@
       </div>
       <section layout="row" layout-align="center">
         <md-chips>
-          <md-chip ng-repeat="file in vm.files">{{file.display}}</md-chip>
+          <md-chip-template ng-repeat="file in vm.files">{{file.display}}</md-chip-template>
         </md-chips>
       </section>
     </md-content>

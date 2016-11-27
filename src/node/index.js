@@ -52,9 +52,9 @@ app.on("ready", () => {
     });
   }
 
-  function getPluginsNMM(filepath) {
+  function getPluginsNMM(filepath, game = "skyrim") {
     const fileDir = filepath || dirname(dialog.showOpenDialog({
-      defaultPath: nmmPluginsDefault,
+      defaultPath: nmmPluginsDefault(game),
       properties: ["openFile"],
       title: "Select your plugins.txt file"
     })[0]);
@@ -73,9 +73,9 @@ app.on("ready", () => {
     });
   }
 
-  function getIniNMM(filepath) {
+  function getIniNMM(filepath, game = "skyrim") {
     let fileDir = filepath || dirname(dialog.showOpenDialog({
-      defaultPath: nmmIniDefault,
+      defaultPath: nmmIniDefault(game),
       properties: ["openFile"],
       title: "Select one of your ini files"
     })[0]);
@@ -99,10 +99,10 @@ app.on("ready", () => {
   ipc.on("mo.getFiles", (event, filename) => {
     getFilesMO(filename || undefined);
   });
-  ipc.on("nmm.getPluginsFile", (event, filename) => {
-    getPluginsNMM(filename || undefined);
+  ipc.on("nmm.getPluginsFile", (event, {filepath, game}) => {
+    getPluginsNMM(filepath || undefined, game);
   });
-  ipc.on("nmm.getIniFiles", (event, filename) => {
-    getIniNMM(filename || undefined);
+  ipc.on("nmm.getIniFiles", (event, {filepath, game}) => {
+    getIniNMM(filepath || undefined, game);
   });
 });

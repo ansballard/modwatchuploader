@@ -38,5 +38,18 @@ export function readFiles(fileDir, filenames) {
   .then(rawFiles => rawFiles.map(cleanFile));
 }
 
-export const nmmPluginsDefault = process.env.APPDATA ? join(process.env.APPDATA, "..", "local", "Skyrim") : undefined;
-export const nmmIniDefault = process.env.USERPROFILE ? join(process.env.USERPROFILE, "My Documents", "My Games", "skyrim") : undefined;
+const gameMap = {
+  skyrimse: {
+    path: "Skyrim Special Edition"
+  },
+  skyrim: {
+    path: "Skyrim"
+  }
+}
+
+export function nmmPluginsDefault(game = "skyrim") {
+  return process.env.APPDATA ? join(process.env.APPDATA, "..", "local", gameMap[game].path) : undefined;
+}
+export function nmmIniDefault(game = "skyrim") {
+  return process.env.USERPROFILE ? join(process.env.USERPROFILE, "My Documents", "My Games", gameMap[game].path) : undefined;
+}

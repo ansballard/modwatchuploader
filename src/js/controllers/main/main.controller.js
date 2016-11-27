@@ -18,6 +18,13 @@ function main($scope, $timeout, $q, Toast, API, State) {
     pluginsPath: undefined,
     iniPath: undefined
   };
+  vm.games = [{
+    display: "Skyrim SE",
+    value: "skyrimse"
+  }, {
+    display: "Skyrim",
+    value: "skyrim"
+  }];
   vm.currentTab = 0;
   vm.userInfo = {
     plugins: [],
@@ -80,7 +87,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
       }
       return mo;
     }),
-    State.getNMMPaths() // NMM Paths
+    State.getNMMPaths({game: vm.userInfo.game}) // NMM Paths
     .then(nmm => {
       if(nmm.ini) {
         vm.nmm.iniPath = nmm.ini;
@@ -96,8 +103,14 @@ function main($scope, $timeout, $q, Toast, API, State) {
       vm.mo.getFiles(paths[0]);
     } else if(vm.currentTab === 1 && paths[1].ini && paths[1].plugins) {
       $q.all([
-        State.getNMMPluginsFile(paths[1].plugins || undefined),
-        State.getNMMIniFiles(paths[1].ini || undefined)
+        State.getNMMPluginsFile({
+          filepath: paths[1].plugins || undefined,
+          game: vm.userInfo.game
+        }),
+        State.getNMMIniFiles({
+          filepath: paths[1].ini || undefined,
+          game: vm.userInfo.game
+        })
       ])
       .then(nmm => ({
         files: angular.extend({game: "skyrim"}, nmm[0].files, nmm[1].files)
@@ -118,7 +131,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
     });
   };
   vm.nmm.getPluginsFile = function() {
-    return State.getNMMPluginsFile()
+    return State.getNMMPluginsFile({game: vm.userInfo.game})
     .then(nmm => {
       vm.nmm.pluginsPath = nmm.path;
       vm.userInfo = angular.extend({}, vm.userInfo, nmm.files, {modlist: undefined});
@@ -126,7 +139,9 @@ function main($scope, $timeout, $q, Toast, API, State) {
     })
   };
   vm.nmm.getIniFiles = function() {
-    return State.getNMMIniFiles()
+    return State.getNMMIniFiles({
+      game: vm.userInfo.game
+    })
     .then(nmm => {
       vm.nmm.iniPath = nmm.path;
       vm.userInfo = angular.extend({}, vm.userInfo, nmm.files, {modlist: undefined});
@@ -172,7 +187,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
         }
       });
     } else {
-      return State.getNMMPaths() // NMM Paths
+      return State.getNMMPaths({game: vm.userInfo.game}) // NMM Paths
       .then(nmm => {
         if(nmm.ini) {
           vm.nmm.iniPath = nmm.ini;
@@ -185,8 +200,14 @@ function main($scope, $timeout, $q, Toast, API, State) {
       .then(nmm => {
         if(nmm.ini && nmm.plugins) {
           return $q.all([
-            State.getNMMPluginsFile(nmm.plugins || undefined),
-            State.getNMMIniFiles(nmm.ini || undefined)
+            State.getNMMPluginsFile({
+              filepath: nmm.plugins || undefined,
+              game: vm.userInfo.game
+            }),
+            State.getNMMIniFiles({
+              filepath: nmm.ini || undefined,
+              game: vm.userInfo.game
+            })
           ])
           .then(nmm => ({
             files: angular.extend({}, nmm[0].files, nmm[1].files)
