@@ -230,6 +230,10 @@ function main($scope, $timeout, $mdDialog, $q, Toast, API, State) {
   }
   function uploadMods() {
     saveProfile(vm.currentTab, "skipToast");
+    if(vm.userInfo.game.includes("fallout")) {
+      vm.userInfo.ini = [];
+      vm.userInfo.prefsini = [];
+    }
     API.uploadMods(vm.userInfo)
     .then(res => {
       Toast.uploadDone();
