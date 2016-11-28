@@ -3,7 +3,7 @@
   "description": "A desktop app to upload load orders and config files to Modwatch",
   "author": "Aaron Ballard <ans.ballard@gmail.com",
   "homepage": "https://nexusmods.com/skyrim/mods/56640",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "main": "index.js",
   "dependencies": {
     "angular": "^1.5.8",

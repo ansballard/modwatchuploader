@@ -44,8 +44,11 @@ const gameMap = {
   },
   skyrim: {
     path: "Skyrim"
+  },
+  fallout4: {
+    path: "Fallout 4"
   }
-}
+};
 
 export function nmmPluginsDefault(game = "skyrim") {
   return process.env.APPDATA ? join(process.env.APPDATA, "..", "local", gameMap[game].path) : undefined;

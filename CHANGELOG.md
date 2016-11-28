@@ -1,5 +1,16 @@
 # Changelog
 
+### 0.4.0
+
+**Minor**
+
+- Fallout 4 Support
+- Change password modal
+
+**Patch**
+
+- none
+
 ### 0.3.3
 
 **Minor**

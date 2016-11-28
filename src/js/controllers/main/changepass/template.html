@@ -1,0 +1,30 @@
+<md-dialog aria-label="Change Password">
+  <form ng-cloak ng-submit="vm.submit()">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Change Password</h2>
+      </div>
+    </md-toolbar>
+    <md-input-container>
+      <label>Name</label>
+      <input required type="text" ng-model="vm.name" />
+    </md-input-container>
+    <md-input-container>
+      <label>Password</label>
+      <input required type="password" ng-model="vm.password" />
+    </md-input-container>
+    <md-input-container>
+      <label>New Password</label>
+      <input required type="password" ng-model="vm.newpass1" />
+    </md-input-container>
+    <md-input-container>
+      <label>Confirm New Password</label>
+      <input required type="password" ng-model="vm.newpass2" />
+    </md-input-container>
+    <md-dialog-actions layout="row-reverse">
+      <md-button type="submit" class="md-raised md-primary">
+        Submit
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

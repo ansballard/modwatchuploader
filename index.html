@@ -105,7 +105,7 @@
       </section>
       <section layout="row">
         <md-input-container flex="100">
-          <label>Game {{vm.userInfo.game}}</label>
+          <label>Game</label>
           <md-select ng-model="vm.userInfo.game" aria-label="Select Game">
             <md-option ng-repeat="game in vm.games" value="{{game.value}}">
               {{::game.display}}
@@ -156,14 +156,17 @@
             </md-button>
             <md-input-container flex>
               <label>ini file directory</label>
-              <input type="text" readonly ng-model="vm.nmm.iniPath" />
+              <input type="text" ng-disabled="vm.userInfo.game.indexOf('fallout') >= 0" readonly ng-model="vm.nmm.iniPath" />
             </md-input-container>
           </div>
         </md-tab>
       </md-tabs>
       <div layout="row" layout-align="center">
+        <md-button class="md-raised md-primary" ng-click="vm.changePass()">
+          Password
+        </md-button>
         <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password" ng-click="vm.saveProfile(vm.currentTab)">
-          Save Profile
+          Save
         </md-button>
         <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password || (!vm.nmm.pluginsPath && !vm.mo.filepath)" ng-click="vm.uploadMods()">
           Upload

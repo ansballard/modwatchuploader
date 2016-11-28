@@ -1,10 +1,13 @@
 import { ipcRenderer as ipc } from "electron";
 
-main.$inject = ["$scope", "$timeout", "$q", "Toast", "API", "State"];
+import changepassController from "./changepass/controller";
+import changepassTemplate from "./changepass/template.html";
+
+main.$inject = ["$scope", "$timeout", "$mdDialog", "$q", "Toast", "API", "State"];
 
 export default main;
 
-function main($scope, $timeout, $q, Toast, API, State) {
+function main($scope, $timeout, $mdDialog, $q, Toast, API, State) {
   const vm = this;
 
   vm.scriptVersion = {
@@ -24,6 +27,9 @@ function main($scope, $timeout, $q, Toast, API, State) {
   }, {
     display: "Skyrim",
     value: "skyrim"
+  }, {
+    display: "Fallout 4",
+    value: "fallout4"
   }];
   vm.currentTab = 0;
   vm.userInfo = {
@@ -36,6 +42,7 @@ function main($scope, $timeout, $q, Toast, API, State) {
   vm.switchTabs = switchTabs;
   vm.uploadMods = uploadMods;
   vm.saveProfile = saveProfile;
+  vm.changePass = changePass;
 
   $q.all([
     State.getCreds()
@@ -233,6 +240,17 @@ function main($scope, $timeout, $q, Toast, API, State) {
       } else {
         Toast.serverDown();
       }
+    });
+  }
+  function changePass() {
+    $mdDialog.show({
+      controller: changepassController,
+      controllerAs: "vm",
+      bindToController: true,
+      template: changepassTemplate,
+      parent: angular.element(document.body),
+      // targetEvent: ev,
+      clickOutsideToClose:true
     });
   }
   function filesRead(info = {}) {

@@ -1,5 +1,3 @@
-Toast.$inject = ["$mdToast"];
-
 import serverdownT from "./templates/serverdown.toast.html";
 import badpasswordT from "./templates/badpassword.toast.html";
 import savedinfoT from "./templates/savedinfo.toast.html";
@@ -9,8 +7,19 @@ import debughelperT from "./templates/debughelper.toast.html";
 
 export default Toast;
 
+Toast.$inject = ["$mdToast"];
+
 function Toast($mdToast) {
   return {
+    text(msg) {
+      $mdToast.show({
+        template: `
+        <md-toast>
+          <span flex>${msg}</span>
+        </md-toast>`,
+        position: "bottom right"
+      });
+    },
     serverDown() {
       defaultToast(serverdownT);
     },

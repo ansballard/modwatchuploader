@@ -16,6 +16,12 @@ function api($http) {
     },
     uploadMods(req) {
       return $http.post(`${url}loadorder`, req);
+    },
+    changePass({username, password, newpassword}) {
+      return $http.post(`${url}api/user/${username}/changepass`, {
+        password,
+        newpassword
+      });
     }
   };
 }
