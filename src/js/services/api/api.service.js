@@ -3,8 +3,8 @@ api.$inject = ["$http"];
 export default api;
 
 function api($http) {
-  // const url = "http://localhost:3001/";
-  const url = "https://modwatchapi-ansballard.rhcloud.com/";
+  const url = "http://localhost:3001/";
+  // const url = "https://api.modwat.ch/";
   return {
     getCurrentVersion() {
       return $http.get(`${url}api/script/version`)
@@ -21,6 +21,11 @@ function api($http) {
       return $http.post(`${url}api/user/${username}/changepass`, {
         password,
         newpassword
+      });
+    },
+    deleteProfile({username, password}) {
+      return $http.post(`${url}api/user/${username}/delete`, {
+        password
       });
     }
   };
