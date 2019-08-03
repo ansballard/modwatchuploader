@@ -1,7 +1,9 @@
-md-input-container, md-tabs {
+md-input-container,
+md-tabs {
   margin-bottom: 0 !important;
 }
-section, md-tabs {
+section,
+md-tabs {
   width: 100%;
 }
 .md-button > md-icon,

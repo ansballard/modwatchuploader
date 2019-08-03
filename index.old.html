@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Modwat.ch Uploader</title>
+  <style>
+    @keyframes wiggle {
+      0%, 60% {
+        transform: translateY(0);
+        backgorund-color: #286090;
+      }
+      20% {
+        transform: translateY(-25px);
+        background-color: #337bb8;
+      }
+      40% {
+        transform: translateY(25px);
+        background-color: #1d4568;
+      }
+    }
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+      display: none !important;
+    }
+    #loader-wrapper {
+      position: relative;
+      height: 100%;
+      transform: translate(34%, 40%);
+    }
+    #loader-wrapper > h3 {
+      margin-left: 18px;
+      color: #286090;
+    }
+    .loader {
+      position: absolute;
+      margin-left: 10px;
+    }
+    .bit {
+      display: inline-block;
+      position: relative;
+      width: 20px;
+      height: 20px;
+      margin: 0 4px;
+      background-color: #286090;
+      border-radius: 50%;
+    }
+    .bit-1 {
+      animation: wiggle 2s ease-in-out infinite;
+      animation-delay: 0s;
+    }
+    .bit-2 {
+      animation: wiggle 2s ease-in-out infinite;
+      animation-delay: 0.2s;
+    }
+    .bit-3 {
+      animation: wiggle 2s ease-in-out infinite;
+      animation-delay: 0.4s;
+    }
+    .bit-4 {
+      animation: wiggle 2s ease-in-out infinite;
+      animation-delay: 0.6s;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="text/css" href="./dist/index.css" rel="stylesheet">
+  <script type="text/javascript" src="./dist/index.js" async></script>
+</head>
+
+<body>
+
+  <div id="loader-wrapper">
+    <h3>Loading Up</h3>
+    <div class="loader">
+      <span class="bit bit-1"></span>
+      <span class="bit bit-2"></span>
+      <span class="bit bit-3"></span>
+      <span class="bit bit-4"></span>
+    </div>
+  </div>
+
+  <div ng-app="uploader" ng-controller="MainController as vm" ng-strict-di ng-jq>
+
+    <md-toolbar>
+      <h1>Modwat.ch Uploader</h1>
+    </md-toolbar>
+    <md-content layout="column" layout-align="left center">
+      <section layout="row">
+        <md-input-container flex="50">
+          <label>Username</label>
+          <input type="text" ng-model="vm.userInfo.username" />
+        </md-input-container>
+        <md-input-container flex="50">
+          <label>Password</label>
+          <input type="password" ng-model="vm.userInfo.password" ng-blur="vm.getUserInfo(vm.userInfo.username)"/>
+        </md-input-container>
+      </section>
+      <section layout="row">
+        <md-input-container flex="50" class="tag-input">
+          <label>Tag</label>
+          <input type="text" ng-model="vm.userInfo.tag" />
+        </md-input-container>
+        <md-input-container flex="50" class="enb-input">
+          <label>ENB</label>
+          <input type="text" ng-model="vm.userInfo.enb" />
+        </md-input-container>
+      </section>
+      <section layout="row">
+        <md-input-container flex="100">
+          <label>Game</label>
+          <md-select ng-model="vm.userInfo.game" aria-label="Select Game">
+            <md-option ng-repeat="game in vm.games" value="{{game.value}}">
+              {{::game.display}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </section>
+      <md-tabs md-dynamic-height md-selected="vm.currentTab">
+        <md-tab label="Mod Organizer">
+          <div layout="row">
+            <md-button class="md-fab md-raised md-primary" ng-click="vm.mo.getFiles()" aria-label="Select Plugins File">
+              <md-tooltip md-direction="bottom">
+                Select Plugins.txt
+              </md-tooltip>
+              <md-icon>
+                <i class="material-icons">folder_open</i>
+              </md-icon>
+            </md-button>
+            <md-input-container flex>
+              <label>Mod Profile Directory</label>
+              <input type="text" readonly ng-model="vm.mo.filepath" />
+            </md-input-container>
+          </div>
+        </md-tab>
+        <md-tab label="Nexus Mod Manager">
+          <div layout="row">
+            <md-button class="md-fab md-raised md-primary" ng-click="vm.nmm.getPluginsFile()" aria-label="Select Plugins File">
+              <md-tooltip md-direction="top">
+                Select Plugins.txt
+              </md-tooltip>
+              <md-icon>
+                <i class="material-icons">folder_open</i>
+              </md-icon>
+            </md-button>
+            <md-input-container flex class="plugins-input">
+              <label>plugins.txt directory</label>
+              <input type="text" readonly ng-model="vm.nmm.pluginsPath" />
+            </md-input-container>
+          </div>
+          <div layout="row">
+            <md-button class="md-fab md-raised md-primary" ng-click="vm.nmm.getIniFiles()" aria-label="Select Ini File">
+              <md-tooltip md-direction="bottom">
+                Select an Ini File
+              </md-tooltip>
+              <md-icon>
+                <i class="material-icons">folder_open</i>
+              </md-icon>
+            </md-button>
+            <md-input-container flex>
+              <label>ini file directory</label>
+              <input type="text" ng-disabled="vm.userInfo.game.indexOf('fallout') >= 0" readonly ng-model="vm.nmm.iniPath" />
+            </md-input-container>
+          </div>
+        </md-tab>
+      </md-tabs>
+      <div layout="row" layout-align="center">
+        <md-button class="md-raised md-primary" ng-click="vm.changePass()">
+          Password
+        </md-button>
+        <md-button class="md-raised md-primary" ng-click="vm.deleteProfile()">
+          Delete
+        </md-button>
+        <!-- <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password" ng-click="vm.saveProfile(vm.currentTab)">
+          Save
+        </md-button> -->
+        <md-button class="md-raised md-primary" ng-disabled="!vm.userInfo.username || !vm.userInfo.password || (!vm.nmm.pluginsPath && !vm.mo.filepath)" ng-click="vm.uploadMods()">
+          Upload
+        </md-button>
+      </div>
+      <section layout="row" layout-align="center">
+        <md-chips>
+          <md-chip-template ng-repeat="file in vm.files">{{file.display}}</md-chip-template>
+        </md-chips>
+      </section>
+    </md-content>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+{
+  "files": [
+    "./index.ts",
+    "./utils.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "../../dist/node",
+    "alwaysStrict": false,
+    "noImplicitAny": false,
+    "allowJs": false,
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es2016", "dom"],
+    "types": ["node", "electron"],
+    "noEmitHelpers": true,
+    "importHelpers": true
+  }
+}

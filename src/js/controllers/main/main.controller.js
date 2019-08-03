@@ -3,6 +3,9 @@ import { ipcRenderer as ipc } from "electron";
 import changepassController from "./changepass/controller";
 import changepassTemplate from "./changepass/template.html";
 
+import deleteProfileController from "./deleteProfile/controller";
+import deleteProfileTemplate from "./deleteProfile/template.html";
+
 main.$inject = ["$scope", "$timeout", "$mdDialog", "$q", "Toast", "API", "State"];
 
 export default main;
@@ -43,6 +46,7 @@ function main($scope, $timeout, $mdDialog, $q, Toast, API, State) {
   vm.uploadMods = uploadMods;
   vm.saveProfile = saveProfile;
   vm.changePass = changePass;
+  vm.deleteProfile = deleteProfile;
 
   $q.all([
     State.getCreds()
@@ -252,6 +256,17 @@ function main($scope, $timeout, $mdDialog, $q, Toast, API, State) {
       controllerAs: "vm",
       bindToController: true,
       template: changepassTemplate,
+      parent: angular.element(document.body),
+      // targetEvent: ev,
+      clickOutsideToClose:true
+    });
+  }
+  function deleteProfile() {
+    $mdDialog.show({
+      controller: deleteProfileController,
+      controllerAs: "vm",
+      bindToController: true,
+      template: deleteProfileTemplate,
       parent: angular.element(document.body),
       // targetEvent: ev,
       clickOutsideToClose:true
